@@ -117,6 +117,9 @@
   )
 
 (define *pc-settings* (the pc-settings-jak1 #f))
+(define *randomizer-settings* (the randomizer-settings #f))
+(define *challenges-settings* (the challenges-settings #f))
+(define *mods-settings* (the mods-settings #f))
 
 
 ;; jak 1 discord rpc structure

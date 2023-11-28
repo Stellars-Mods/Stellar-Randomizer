@@ -106,7 +106,10 @@
   (first-any (-> this tasks) #t)
   (let ((v1-3 (current-status (-> this tasks))))
     (and (or (= v1-3 (task-status need-reward-speech)) (= v1-3 (task-status invalid)))
-         (not (task-closed? (game-task citadel-sage-green) (task-status need-hint)))
+         (or 
+          (enable-citadel-cutscene-skips?)
+          (not (task-closed? (game-task citadel-sage-green) (task-status need-hint)))
+         )
          )
     )
   )

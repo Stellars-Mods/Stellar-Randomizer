@@ -687,6 +687,12 @@
   (cheat-no-tex                 #x109e)
   (cheat-mirror                 #x109f)
   (cheat-huge-head              #x10a0)
+
+  (challenges-smalljak          #x10bc)
+  (challenges-bigjak            #x10bd)
+  (challenges-flatjak           #x10be)
+  (challenges-paperjak          #x10bf)
+
   (music-player                 #x10c0)
   (scene-player                 #x10c1)
   (play-credits                 #x10c2)
@@ -764,8 +770,10 @@
   (scene-255                    #x12ff)
   (hint-0                       #x1300)
   (hint-511                     #x14ff)
+
   (speedrunner-mode             #x1500)
   (cutscene-skips               #x1501)
+
   (checkpoint-select            #x1502)
   (speedrun-options-heading     #x1503)
   (speedrun-options-warning     #x1504)
@@ -795,6 +803,7 @@
   (speedrun-il-cave              #x151c)
   (speedrun-il-lavatube          #x151d)
   (speedrun-il-citadel           #x151e)
+
   (speedrun-new-cat-ext          #x151f)
   (speedrun-new-game-plus        #x1520)
   (speedrun-hub1-100             #x1521)
@@ -827,6 +836,55 @@
   (input-opts-binds-unknown #x1615)
   (progress-no-other-resolution-options #x1616)
   (input-opts-controller-led-reflect-heat #x1617)
+
+  ;; Mod Options
+  (mod-options                  #x1700)
+  (checkpoint-randomizer        #x1701)
+  (custom-challenges            #x1702)
+  (rng-lib                      #x1703)
+  (mod-powercellcutscenes       #x1704)
+  (additional-checkpoints       #x1705)
+  
+  ;; Checkpoint Randomizer
+  (item-count-to-trigger-warp   #x1710)
+  (use-random-seed?             #x1711)
+  (randomizer-random-seed       #x1712)
+  (randomizer-set-seed          #x1713)
+  (randomizer-warp-options      #x1714)
+  (checkpoint-warpcells?        #x1715)
+  (checkpoint-warporbs?         #x1716)
+  (checkpoint-warpbuzzer?       #x1717)
+  (checkpoint-warpgreeneco?     #x1718)
+  (checkpoint-warpblueeco?      #x1719)
+  (checkpoint-warpredeco?       #x171a)
+  (checkpoint-warpyelloweco?    #x171b)
+  (checkpoint-warpecovents?     #x171c)
+  (checkpoint-warpdeath?        #x171d)
+  (show-warp-counter?           #x171e)
+  (checkpoint-logic             #x171f)
+  (logic-random-checkpoint      #x1720)
+  (logic-random-level           #x1721)
+
+  ;;Challenges
+  (challenges-orbless           #x1730)
+  (challenges-hardcore          #x1731)
+  (challenges-damageless        #x1732)
+  (challenges-bonkless          #x1733)
+  (challenges-casual            #x1734)
+  (challenges-pacifist          #x1735)
+
+  ;;RNG Library
+  (rand-vu                      #x1740)
+  (knuth                        #x1741)
+
+  ;;Additional Checkpoints
+  (checkpoint-training-far      #x1750)
+  (checkpoint-village1-far      #x1751)
+  (checkpoint-beach-pelican     #x1752)
+  (checkpoint-beach-far         #x1753)
+  (checkpoint-jungle-far        #x1754)
+  (checkpoint-swamp-flutflut    #x1755)
+  (checkpoint-village3-cart     #x1756)
 
   ;; mod text
   (pad-triangle #x2000)
@@ -884,7 +942,6 @@
   (define *fallback-text* (the-as game-text-info #f)))
 
 (defun-extern print-game-text string font-context symbol int int float)
-
 
 ;; added
 (defun-debug text-id->string ((text text-id))

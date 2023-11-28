@@ -1733,7 +1733,7 @@
  "game/settings-h.gc"
  )
 
-(goal-src "pc/util/knuth-rand.gc" "settings-h")
+(goal-src "pc/util/knuth-rand.gc" "settings-h" "pckernel-h" "vector-h")
 
 (goal-src "pc/features/speedruns-h.gc")
 
@@ -1743,6 +1743,7 @@
 
  :deps
  ("$OUT/obj/settings-h.o"
+  "$OUT/obj/knuth-rand.o"
   "$OUT/obj/speedruns-h.o")
 
  "util/capture.gc"
@@ -1979,12 +1980,19 @@
  "game/effect-control.gc"
  "common-obs/water.gc"
  "common-obs/collectables-part.gc"
+ "game/projectiles.gc"
+ "common-obs/baseplat.gc"
+ "mods/mods-common.gc"
+ "mods/checkpoint-randomizer.gc"
+ "mods/jak-size.gc"
+ "mods/localmulti.gc"
  "common-obs/collectables.gc"
  "game/task/task-control.gc"
  "common-obs/process-taskable.gc"
  "camera/pov-camera.gc"
  "game/powerups.gc"
  "common-obs/crates.gc"
+ "mods/moving-items-library.gc"
  "ui/hud.gc"
  "ui/hud-classes.gc"
  "ui/progress/progress-static.gc"
@@ -1992,7 +2000,6 @@
  "ui/progress/progress-draw.gc"
  "ui/progress/progress.gc"
  "ui/credits.gc"
- "game/projectiles.gc"
  "gfx/ocean/ocean.gc"
  "gfx/ocean/ocean-vu0.gc"
  "gfx/ocean/ocean-texture.gc"
@@ -2015,7 +2022,6 @@
  "common-obs/rigid-body.gc"
  "common-obs/nav-enemy-h.gc"
  "common-obs/nav-enemy.gc"
- "common-obs/baseplat.gc"
  "common-obs/basebutton.gc"
  "common-obs/tippy.gc"
  "anim/joint-exploder.gc"

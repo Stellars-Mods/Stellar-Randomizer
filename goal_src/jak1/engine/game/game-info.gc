@@ -1,6 +1,6 @@
 ;;-*-Lisp-*-
 (in-package goal)
-
+(define-extern reset-all (function none))
 ;; name: game-info.gc
 ;; name in dgo: game-info
 ;; dgos: GAME, ENGINE
@@ -170,6 +170,27 @@
   (-> this task-perm-list data arg0)
   )
 
+(defun enable-or-disable-additional-continue-flag ((this game-info) (continue-name string) (enable? symbol))
+  (if enable?
+    (logclear! (-> (get-continue-by-name this continue-name) flags) (continue-flags additional-disabled))
+    (logior! (-> (get-continue-by-name this continue-name) flags) (continue-flags additional-disabled))
+    )
+  (none)
+  )
+
+(defun update-additional-continue-flags ((this game-info))
+  (enable-or-disable-additional-continue-flag this "training-far" (-> *mods-settings* checkpoint-training-far))
+  (enable-or-disable-additional-continue-flag this "village1-far" (-> *mods-settings* checkpoint-village1-far))
+  (enable-or-disable-additional-continue-flag this "beach-pelican" (-> *mods-settings* checkpoint-beach-pelican))
+  (enable-or-disable-additional-continue-flag this "beach-far" (-> *mods-settings* checkpoint-beach-far))
+  (enable-or-disable-additional-continue-flag this "jungle-far" (-> *mods-settings* checkpoint-jungle-far))
+  (enable-or-disable-additional-continue-flag this "swamp-flutflut" (-> *mods-settings* checkpoint-swamp-flutflut))
+  (enable-or-disable-additional-continue-flag this "village3-cart" (-> *mods-settings* checkpoint-village3-cart))
+  )
+
+(define-extern resetCheckpointRandomizer (function none))
+(define-extern orchestrateCheckpointWarp (function int none))
+
 (defmethod initialize! ((this game-info) (cause symbol) (save-to-load game-save) (continue-point-override string))
   "Initialize the game-info.
     The cause can be 'dead if you die, or 'game to reset everything.
@@ -239,15 +260,22 @@
                             )
                           )
                     )
+
+     (resetCheckpointRandomizer)
      (set! (-> this auto-save-count) 0)
-     (set! (-> *setting-control* default auto-save) #f)
+     ;; mod skip disabling autosave if we want to autosave overtop.
+     (if (not (or (-> *challenges-settings* challenges-hardcore?)(-> *challenges-settings* challenges-orbless?)))
+     (begin
+      (set! (-> *setting-control* default auto-save) #f)
+     )
+     )
      (set! (-> this money) 0.0)
      (set! (-> this fuel) 0.0)
      (set! (-> this money-total) 0.0)
      (set! (-> this buzzer-total) 0.0)
      (set! (-> this perm-list length) 0)
      (clear-all! (-> this text-ids-seen))
-     (set! (-> this death-movie-tick) (rand-vu-int-count 10))
+     (set! (-> this death-movie-tick) (mod-rand-int-count 10))
      (set! (-> this total-deaths) 0)
      (set! (-> this continue-deaths) 0)
      (set! (-> this fuel-cell-deaths) 0)
@@ -257,6 +285,7 @@
      (set-time! (-> this continue-time))
      (set-time! (-> this death-time))
      (set-time! (-> this hit-time))
+
      (dotimes (v1-50 116)
        (set! (-> this fuel-cell-time 0) 0)
        (nop!)
@@ -269,6 +298,183 @@
        (set! (-> this level-opened v1-53) (the-as uint 0))
        (nop!)
        )
+     (set! (-> this green-eco-total) 0.0)
+     (set! (-> this blue-eco-total) 0.0)
+     (set! (-> this red-eco-total) 0.0)
+     (set! (-> this yellow-eco-total) 0.0)
+     )
+    )
+  (case cause
+    (('game 'try)
+     ;; full restart, or ran out of lives
+     (case (-> this mode)
+       (('play)
+        (set! *display-profile* #f)
+        (set! *display-entity-errors* #f)
+        )
+       )
+     (set! (-> this life-max) (-> *GAME-bank* life-max-default))
+     (set! (-> this life) (-> *GAME-bank* life-start-default))
+     )
+    )
+
+  (let ((v1-65 (-> this mode)))
+    (cond
+      ((= v1-65 'debug)
+       ;; in debug, we didn't kill things so we don't need to restart them
+       (reset-actors cause)
+       (if save-to-load
+           (load-game! this save-to-load)
+           )
+       )
+      ((= v1-65 'play)
+       ;; don't allow pausing/start menu
+       (when *target*
+         (set-setting *setting-control* *target* 'allow-pause #f 0.0 0)
+         (set-setting *setting-control* *target* 'allow-progress #f 0.0 0)
+         (apply-settings *setting-control*)
+         )
+
+       ;; send the auto-save process a 'die message
+       (send-event (handle->process (-> *game-info* auto-save-proc)) 'die)
+
+       ;; black screen, stop spawning actors
+       (set! (-> *level* border?) #f)
+       (set! (-> *setting-control* default border-mode) #f)
+       (set! *spawn-actors* #f)
+       (set-blackout-frames (seconds 0.1))
+
+       ;; send target a 'reset message.
+       (send-event *target* 'reset)
+       ;; start a temporary process to restart things
+       (process-spawn-function process (lambda ((arg0 symbol) (arg1 symbol) (arg2 continue-point) (arg3 game-save))
+                                           (stop arg0)
+                                           (reset-actors arg1)
+                                           (set-continue! *game-info* arg2)
+                                           (when arg3
+                                             (load-game! *game-info* arg3)
+                                             (set! arg2 (get-or-create-continue! *game-info*))
+                                             )
+                                           (suspend)
+                                           (start arg0 arg2)
+                                           (none)
+                                           )
+                              (-> this mode) cause (get-or-create-continue! this) save-to-load
+                              :from *4k-dead-pool*
+                              )
+       (set-master-mode 'game)
+       )
+      )
+    )
+  (label cfg-50)
+  (update-additional-continue-flags this)
+  this
+  )
+
+(defmethod reset! game-info ((this game-info) (cause symbol) (save-to-load game-save) (continue-point-override string))
+  "Initialize the game-info.
+    The cause can be 'dead if you die, or 'game to reset everything.
+    If save-to-load is not #f will load data from that.
+    If continue-point-override is not #f, will use that."
+
+  (local-vars (v0-0 int) (sv-96 symbol))
+  (case cause
+    (('dead)
+     ;; reload game-info because we died.  Increase death counts
+     (+! (-> this total-deaths) 1)
+     (+! (-> this continue-deaths) 1)
+     (+! (-> this fuel-cell-deaths) 1)
+     (when *target*
+       (let ((lev-info (-> *target* current-level info)))
+         (set! v0-0
+               (when (>= (-> *level-task-data-remap* length) (-> lev-info index))
+                 ;; update death per level.
+                 (set! v0-0
+                       (seekl (the-as int (-> this deaths-per-level (-> *level-task-data-remap* (+ (-> lev-info index) -1)))) 255 1)
+                       )
+                 (set! (-> this deaths-per-level (-> *level-task-data-remap* (+ (-> lev-info index) -1))) (the-as uint v0-0))
+                 v0-0
+                 )
+               )
+         )
+       )
+     (case (-> this mode)
+       (('play)
+        ;; now pick between life/try depending on if we ran out of lives or not. (this isnt really used)
+        (if (< 0.0 (-> this life))
+            (set! cause 'life)
+            (set! cause 'try)
+            )
+        )
+       (else
+         ;; not in play mode, we're done.
+         (set! this this)
+         (goto cfg-50)
+         )
+       )
+     )
+    )
+  (kill-current-level-hint '() '() 'die)
+  (case cause
+    (('game)
+     ;; we are doing a full restart.
+     ;; reset everything!
+     (reset-all-hint-controls)
+     (set-continue! this (cond
+                          (continue-point-override
+                            (empty)
+                            continue-point-override
+                            )
+                          ((!= *kernel-boot-message* 'play)
+                           "game-start"
+                           )
+                          (*debug-segment*
+                            "game-start"
+                            )
+                          (else
+                            "game-start"
+                            )
+                          )
+                    )
+     (set! (-> this auto-save-count) 0)
+     ;; mod skip disabling autosave if we want to autosave overtop.
+     (if (not (or (-> *challenges-settings* challenges-hardcore?)(-> *challenges-settings* challenges-orbless?)))
+     (begin
+      (set! (-> *setting-control* default auto-save) #f)
+     )
+     )
+     (set! (-> this money) 0.0)
+     (set! (-> this fuel) 0.0)
+     (set! (-> this money-total) 0.0)
+     (set! (-> this buzzer-total) 0.0)
+     (set! (-> this perm-list length) 0)
+     (clear-all! (-> this text-ids-seen))
+     (set! (-> this death-movie-tick) (mod-rand-int-count 10))
+     (set! (-> this total-deaths) 0)
+     (set! (-> this continue-deaths) 0)
+     (set! (-> this fuel-cell-deaths) 0)
+     (set! (-> this death-pos length) 0)
+     (set! (-> this game-start-time) (-> *display* base-frame-counter))
+     (set! (-> this fuel-cell-pickup-time) (-> *display* base-frame-counter))
+     (set! (-> this continue-time) (-> *display* base-frame-counter))
+     (set! (-> this death-time) (-> *display* base-frame-counter))
+     (set! (-> this hit-time) (-> *display* base-frame-counter))
+     (dotimes (v1-50 116)
+       (set! (-> this fuel-cell-time 0) 0)
+       (nop!)
+       )
+     (dotimes (v1-53 32)
+       (set! (-> this money-per-level v1-53) (the-as uint 0))
+       (set! (-> this deaths-per-level v1-53) (the-as uint 0))
+       (set! (-> this enter-level-time v1-53) 0)
+       (set! (-> this in-level-time v1-53) 0)
+       (set! (-> this level-opened v1-53) (the-as uint 0))
+       (nop!)
+       )
+     (set! (-> this green-eco-total) 0.0)
+     (set! (-> this blue-eco-total) 0.0)
+     (set! (-> this red-eco-total) 0.0)
+     (set! (-> this yellow-eco-total) 0.0)
      )
     )
   (case cause
@@ -446,6 +652,22 @@
        buzz-count
        )
      )
+    (('eco-green 'eco-pill)
+     ;; increment our eco count
+     (when (> amount 0) (+! (-> this green-eco-total) amount))
+     )
+    (('eco-blue)
+     ;; increment our eco count
+     (+! (-> this blue-eco-total) amount)
+     )
+    (('eco-red)
+     ;; increment our eco count
+     (+! (-> this red-eco-total) amount)
+     )
+    (('eco-yellow)
+     ;; increment our eco count
+     (+! (-> this yellow-eco-total) amount)
+     )
     )
   )
 
@@ -563,6 +785,10 @@
          ;; negative health. Subtract.
          (seek! (-> this health) 0.0 (- amount))
 
+         (if (-> *challenges-settings* challenges-damageless?)
+          (reset-all)
+          )
+
          ;; not sure why we do this. But this will set the eco pill collection time.
          (if (>= amount -10.0)
              (pickup-collectable! this (pickup-type eco-pill) 0.0 source-handle)
@@ -586,6 +812,8 @@
        :delay (nop!)
        )
      (-> this health)
+
+     (adjust (-> (the-as target (-> this process)) game) 'eco-green amount source-handle)
      )
 
     (((pickup-type eco-pill))
@@ -607,6 +835,10 @@
            (process->handle (-> this process))
            )
          )
+        (begin
+          ;; only increment green-eco-total if this didn't result in big health pickup
+          (adjust (-> (the-as target (-> this process)) game) 'eco-pill amount source-handle)
+         )
        )
      (-> this eco-pill)
      )
@@ -623,6 +855,12 @@
            (sound-play "money-pickup")
            )
        (set-time! (-> this money-pickup-time))
+
+       ;; orbless mod
+       (when (-> *challenges-settings* challenges-orbless?)
+           (reset-all)
+           (return 1.0)
+           )
        )
      (adjust (-> (the-as target (-> this process)) game) 'money amount source-handle)
      )
@@ -785,6 +1023,23 @@
            )
          )
        )
+
+     (when (> amount 0.0)
+      (case kind
+            (((pickup-type eco-blue))
+              (adjust (-> (the-as target (-> this process)) game) 'eco-blue amount source-handle)
+              )
+            (((pickup-type eco-green))
+              (adjust (-> (the-as target (-> this process)) game) 'eco-green amount source-handle)
+              )
+            (((pickup-type eco-yellow))
+              (adjust (-> (the-as target (-> this process)) game) 'eco-yellow amount source-handle)
+              )
+            (((pickup-type eco-red))
+              (adjust (-> (the-as target (-> this process)) game) 'eco-red amount source-handle)
+              )
+            )
+      )
      (-> this eco-level)
      )
     (else

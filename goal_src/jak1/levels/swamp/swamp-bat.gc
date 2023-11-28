@@ -349,6 +349,9 @@ swamp-bat-slave-event-handler
 (defstate swamp-bat-slave-die (swamp-bat-slave)
   :event process-drawable-death-event-handler
   :code (behavior ((arg0 handle))
+    (if (-> *challenges-settings* challenges-pacifist?)
+      (reset-all)
+      )
     (ja-channel-push! 1 (seconds 0.07))
     (let ((gp-0 (new-stack-vector0)))
       (let ((v1-1 (handle->process arg0)))
@@ -405,7 +408,7 @@ swamp-bat-slave-event-handler
   (set! (-> self fact)
         (new 'process 'fact-info-enemy self (pickup-type eco-pill-random) (-> *FACT-bank* default-pill-inc))
         )
-  (set! (-> self idle-anim-speed) (rand-vu-float-range 0.9 1.1))
+  (set! (-> self idle-anim-speed) (mod-rand-float-range 0.9 1.1))
   (set! (-> self strafe-distance) 0.0)
   (set! (-> self strafe-envelope) 0.0)
   (set! (-> self idle-position-index) arg1)

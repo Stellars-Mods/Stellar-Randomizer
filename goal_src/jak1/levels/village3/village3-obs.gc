@@ -151,11 +151,15 @@
         (let ((s3-0 (get-reminder (get-task-control (game-task village3-button)) 2))
               (s4-1 (and *cheat-mode* (cpad-hold? 0 l3)))
               (s5-1 (vector<-cspace! (new 'stack-no-clear 'vector) (joint-node gondola-lod0-jg main)))
+              (in-snowy (= (-> (level-get-target-inside *level*) name) 'snow))
               )
           (cond
-            ((not (or s4-1 (task-closed? (game-task village3-button) (task-status need-hint))))
-             )
-            ((and (< (the int (-> *game-info* fuel)) (+ s3-0 2)) (< (the int (-> *game-info* fuel)) 71) (not s4-1))
+            ((not (or in-snowy
+                      s4-1 
+                      (task-closed? (game-task village3-button) (task-status need-hint))
+                      ))
+              )
+            ((and (< (the int (-> *game-info* fuel)) (+ s3-0 2)) (< (the int (-> *game-info* fuel)) 71) (not s4-1) (not in-snowy))
              (level-hint-spawn (text-id gondola-need-cells) "asstvb75" (the-as entity #f) *entity-pool* (game-task none))
              )
             (else

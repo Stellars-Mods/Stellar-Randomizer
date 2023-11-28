@@ -1,0 +1,452 @@
+;;-*-Lisp-*-
+(in-package goal)
+
+;; name: checkpoint-randomizer.gc
+;; name in dgo: checkpoint-randomizer
+;; dgos: GAME, ENGINE
+
+(define *checkpoint-list* (the-as (array string) (new
+                                             'static
+                                             'boxed-array
+                                             :type string :length 77 :allocated-length 77
+  "game-start"
+  "training-far"
+  "village1-hut"
+  "village1-warp"
+  "beach-start"
+  "beach-pelican"
+  "beach-far"
+  "beach-start"
+  "beach-pelican"
+  "beach-far"
+  "jungle-start"
+  "jungle-far"
+  "jungle-tower"
+  "jungle-start"
+  "jungle-far"
+  "jungle-tower"
+  "misty-start"
+  "misty-silo"
+  "misty-bike"
+  "misty-backside"
+  "misty-silo2"
+  "firecanyon-start"
+  "firecanyon-end"
+  "village2-start"
+  "village2-warp"
+  "village2-dock"
+  "sunken-start"
+  "sunken1"
+  "sunken2"
+  "sunken-tube1"
+  "sunkenb-start"
+  "sunkenb-helix"
+  "swamp-start"
+  "swamp-dock1"
+  "swamp-cave1"
+  "swamp-dock2"
+  "swamp-cave2"
+  "swamp-game"
+  "swamp-cave3"
+  "swamp-flutflut"
+  "rolling-start"
+  "ogre-start"
+  "ogre-race"
+  "ogre-end"
+  "village3-start"
+  "village3-warp"
+  "village3-farside"
+  "village3-cart"
+  "snow-start"
+  "snow-fort"
+  "snow-flut-flut"
+  "snow-pass-to-fort"
+  "snow-by-ice-lake"
+  "snow-by-ice-lake-alt"
+  "snow-outside-fort"
+  "snow-outside-cave"
+  "snow-across-from-flut"
+  "maincave-start"
+  "maincave-to-darkcave"
+  "maincave-to-robocave"
+  "darkcave-start"
+  "robocave-start"
+  "robocave-bottom"
+  "lavatube-start"
+  "lavatube-middle"
+  "lavatube-after-ribbon"
+  "lavatube-end"
+  "citadel-start"
+  "citadel-entrance"
+  "citadel-warp"
+  "citadel-plat-start"
+  "citadel-plat-end"
+  "citadel-launch-start"
+  "citadel-launch-end"
+  "citadel-generator-start"
+  "citadel-generator-end"
+  "citadel-elevator"
+  )
+  )
+  )
+
+(define *checkpoint-list-by-level-idx* 
+  (new 'static 'boxed-array :type (array string) :length 16 :allocated-length 16
+    ;; Geyser Rock
+    (new 'static 'boxed-array :type string :length 2
+      "game-start"
+      "training-far"
+    )
+    ;; Sandover
+    (new 'static 'boxed-array :type string :length 3
+      "village1-hut"
+      "village1-warp"
+      "village1-far"
+    )
+    ;; Sentinel Beach
+    (new 'static 'boxed-array :type string :length 3
+      "beach-start"
+      "beach-pelican"
+      "beach-far"
+    )
+    ;; Forbidden Jungle
+    (new 'static 'boxed-array :type string :length 3
+      "jungle-start"
+      "jungle-far"
+      "jungle-tower"
+    )
+    ;; Misty Island
+    (new 'static 'boxed-array :type string :length 5
+      "misty-start"
+      "misty-silo"
+      "misty-bike"
+      "misty-backside"
+      "misty-silo2"
+    )
+    ;; Fire Canyon
+    (new 'static 'boxed-array :type string :length 2
+      "firecanyon-start"
+      "firecanyon-end"
+    )
+    ;; Rock Village
+    (new 'static 'boxed-array :type string :length 3
+      "village2-start"
+      "village2-warp"
+      "village2-dock"
+    )
+    ;; Lost Precursor City
+    (new 'static 'boxed-array :type string :length 6
+      "sunken-start"
+      "sunken1"
+      "sunken2"
+      "sunken-tube1"
+      "sunkenb-start"
+      "sunkenb-helix"
+    )
+    ;; Boggy Swamp
+    (new 'static 'boxed-array :type string :length 8
+      "swamp-start"
+      "swamp-dock1"
+      "swamp-cave1"
+      "swamp-dock2"
+      "swamp-cave2"
+      "swamp-game"
+      "swamp-cave3"
+      "swamp-flutflut"
+    )
+    ;; Precursor Basin
+    (new 'static 'boxed-array :type string :length 1
+      "rolling-start"
+    )
+    ;; Mountain Pass
+    (new 'static 'boxed-array :type string :length 3
+      "ogre-start"
+      "ogre-race"
+      "ogre-end"
+    )
+    ;; Volcanic Crater
+    (new 'static 'boxed-array :type string :length 4
+      "village3-start"
+      "village3-warp"
+      "village3-farside"
+      "village3-cart"
+    )
+    ;; Snowy Mountain
+    (new 'static 'boxed-array :type string :length 9
+      "snow-start"
+      "snow-fort"
+      "snow-flut-flut"
+      "snow-pass-to-fort"
+      "snow-by-ice-lake"
+      "snow-by-ice-lake-alt"
+      "snow-outside-fort"
+      "snow-outside-cave"
+      "snow-across-from-flut"
+    )
+    ;; Spider Cave
+    (new 'static 'boxed-array :type string :length 6
+      "maincave-start"
+      "maincave-to-darkcave"
+      "maincave-to-robocave"
+      "darkcave-start"
+      "robocave-start"
+      "robocave-bottom"
+    )
+    ;; Lava Tube
+    (new 'static 'boxed-array :type string :length 6
+      "lavatube-start"
+      "lavatube-middle"
+      "lavatube-after-ribbon"
+      "lavatube-end"
+      "citadel-entrance"
+      "citadel-warp"
+    )
+    ;; Gol and Maia's Citadel
+    (new 'static 'boxed-array :type string :length 8
+      "citadel-start"
+      "citadel-plat-start"
+      "citadel-plat-end"
+      "citadel-launch-start"
+      "citadel-launch-end"
+      "citadel-generator-start"
+      "citadel-generator-end"
+      "citadel-elevator"
+    )
+  )
+)
+
+(deftype rando-state (structure)
+  (
+    (next-idx int)
+    (checkpoint-list (array string))
+    (collectable-interval int) ;; serves as a counter, counts up until it reaches collectables-needed-to-warp, then resets back to 0
+    (collectable-count int)
+    )
+  (:methods
+    (new (symbol type int) _type_ 0)
+    )
+  )
+  
+(defmethod new rando-state ((allocation symbol) (type-to-make type) (length int))
+  "Allocate a new rando-state with a checkpoint list of given length"
+  (let ((obj (object-new allocation type-to-make (the-as int (-> type-to-make size)))))
+    (set! (-> obj next-idx) 0)
+    (set! (-> obj checkpoint-list)
+          (the-as (array string)
+                  ((method-of-type array new) allocation array string length)
+                  )
+          )
+    (set! (-> obj checkpoint-list length) 0)
+    (set! (-> obj collectable-interval) 0)
+    (set! (-> obj collectable-count) 0)
+    obj
+    )
+  )
+
+(define *rando-list-length* 1000)
+(define *rando-state* (new 'global 'rando-state *rando-list-length*))
+
+(defun update-collectable-hud-counters ()
+  (when (and (-> *randomizer-settings* show-warp-counter?)
+             (> (-> *rando-state* collectable-count) 0) 
+             (= *master-mode* 'game)
+             (not (or (movie?) (< (-> *display* base-frame-counter) (-> *game-info* letterbox-time)))))
+    (let ((str-x (the int (* 0.01 512)))
+          (str-y (the int 60)))
+      (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug))
+        (draw-string-xy (string-format "~D/~D" (the int (-> *rando-state* collectable-interval)) (the int (-> *randomizer-settings* collectables-needed-to-warp)))
+          buf str-x str-y (font-color white) (font-flags shadow kerning large left))
+        )
+      )
+    )
+  )
+
+(defun randomizer-run-each-frame ()
+;;Randomizer stuff that needs to run constantly
+(if (-> *randomizer-settings* checkpoint-randomizer?)
+(begin
+
+  ;;update the number of items they have collected
+   (set! (-> *rando-state* collectable-count)
+   (+
+      (if (-> *randomizer-settings* warp-on-cell?) (the int (-> *game-info* fuel)) 0)
+      (if (-> *randomizer-settings* warp-on-orb?) (the int (-> *game-info* money-total)) 0)
+      (if (-> *randomizer-settings* warp-on-buzzer?) (the int (-> *game-info* buzzer-total)) 0)
+      (if (-> *randomizer-settings* warp-on-green-eco?) (the int (-> *game-info* green-eco-total)) 0)
+      (if (-> *randomizer-settings* warp-on-blue-eco?) (the int (-> *game-info* blue-eco-total)) 0)
+      (if (-> *randomizer-settings* warp-on-red-eco?) (the int (-> *game-info* red-eco-total)) 0)
+      (if (-> *randomizer-settings* warp-on-yellow-eco?) (the int (-> *game-info* yellow-eco-total)) 0)
+      (if (-> *randomizer-settings* warp-on-death?) (the int (-> *game-info* total-deaths)) 0)
+      )
+   )
+
+  (update-collectable-hud-counters)
+  (when (-> *randomizer-settings* use-random-seed?)
+    ;; burn through a random number every frame for improved randomness
+    (knuth-rand-advance-seed)
+  )
+)
+)
+(none))
+
+(defun generateCheckpointList ((seed uint) (length int))
+  ;; set the seed which will be used for generating checkpoint list
+  (knuth-rand-init (the int64 seed))
+
+  (dotimes (idx length)
+    ;; append checkpoint
+    (set! (-> *rando-state* checkpoint-list idx)
+      (case (-> *randomizer-settings* checkpoint-logic)
+        (('logic-random-level)
+          ;; choose random level first...
+          (let ((random-level-idx (knuth-rand-int-range 0 (-> *checkpoint-list-by-level-idx* length))))
+            ;; ...then choose random checkpoint within that level
+            (let ((random-level-checkpoint-idx (knuth-rand-int-range 0 (-> *checkpoint-list-by-level-idx* random-level-idx length))))
+              (-> *checkpoint-list-by-level-idx* 
+                random-level-idx 
+                random-level-checkpoint-idx
+                )
+              )
+            )
+          )
+        (('logic-random-checkpoint)
+          ;; original logic, just choose random checkpoint from list
+          (-> *checkpoint-list* (knuth-rand-int-range 0 (-> *checkpoint-list* length)))
+          )
+        (else
+          ;; original logic, just choose random checkpoint from list
+          (-> *checkpoint-list* (knuth-rand-int-range 0 (-> *checkpoint-list* length)))
+          )
+        )
+      )
+    )
+  ;; reset initial index
+  (set! (-> *rando-state* next-idx) 0)
+  (none)
+  )
+
+(defun advanceCheckpointList ((n int))
+  (set! 
+    (-> *rando-state* next-idx)
+    (mod (+ (-> *rando-state* next-idx) n) *rando-list-length*)
+    )
+  )
+
+(defun warpToCheckpoint ((checkpointName string))
+  ;; warps to checkpoint, assuming it is already safe to use
+  (format 0 "RANDOMIZER: ...warping to ~A~%" checkpointName)
+  (set-continue! *game-info* checkpointName)
+
+  ;; trigger death to warp to checkpoint
+  ;; this ensures init functions for new level run (misty boat, citadel elevator)
+  (initialize! *game-info* 'die (the-as game-save #f) (the-as string #f))
+  (none)
+  )
+
+(defun checkpointValid? ((checkpointName string))
+  (case-str checkpointName
+    ;; avoid village1-warp if cutscene tasks not closed
+    (("village1-warp")
+      (if (or 
+          (not (task-closed? (game-task intro) (task-status need-resolution))) 
+          (not (task-closed? (game-task beach-ecorocks) (task-status need-introduction)))
+          )
+        (return #f)
+        )
+      )
+    )
+
+  ;; additional checkpoints enabled/disabled
+  (if (logtest? (-> (get-continue-by-name *game-info* checkpointName) flags) (continue-flags additional-disabled))
+    (return #f)
+    )
+
+  #t
+  )
+
+(defun getNextCheckpoint ()
+  (let ((checkpointName (-> *rando-state* checkpoint-list (-> *rando-state* next-idx))))
+    (while #t
+      ;; increment next-idx
+      (advanceCheckpointList 1)
+
+      (when (checkpointValid? (the-as string checkpointName))
+        (format 0 "RANDOMIZER: checkpoint ~A is valid~%" checkpointName)
+        (return checkpointName) ;; break from while loop
+        )
+        
+      (format 0 "RANDOMIZER: checkpoint ~A is NOT valid, will grab the next~%" checkpointName)
+      (set! checkpointName (-> *rando-state* checkpoint-list (-> *rando-state* next-idx)))
+      )
+    )
+  ""
+  )
+
+(defun peekNextCheckpoint ()
+  (-> *rando-state* checkpoint-list (-> *rando-state* next-idx))
+  )
+
+(defun blacked-out? ()
+  ;; if blackout-time is in the future, we're blacked out
+  (< (current-time) (-> *game-info* blackout-time))
+  )
+
+(defun resetCheckpointRandomizer ()
+  (set! (-> *rando-state* collectable-count) 0)
+
+  (when (-> *randomizer-settings* use-random-seed?)
+    (set! (-> *randomizer-settings* current-seed) (knuth-rand-next-int))
+    )
+  
+  ;; reset checkpoint counter backup
+  (set! (-> *randomizer-settings* backup-next-idx) 0)
+
+  ;; generate checkpoint list from seed
+  (generateCheckpointList (-> *randomizer-settings* current-seed) *rando-list-length*)
+  (none)
+  )
+
+(defun orchestrateCheckpointWarp ((amount int))
+  ;; in case of crash/closed window/etc, generate from last seed and advance checkpoints
+  (when (null? (peekNextCheckpoint))
+    (format 0 "Regenerating checkpoint list from backup, checkpoints used: ~D~%" (-> *randomizer-settings* backup-next-idx))
+
+    ;; generate checkpoint list from seed
+    (generateCheckpointList (-> *randomizer-settings* current-seed) *rando-list-length*)
+    (advanceCheckpointList (-> *randomizer-settings* backup-next-idx))
+    )
+
+  ;; if blacked out we're already warping, so skip
+  (if (not (blacked-out?))
+    (begin
+      (+! (-> *rando-state* collectable-interval) amount)
+
+      ;; if we're above the collectable threshold, then warp
+      (when (>= (-> *rando-state* collectable-interval) (-> *randomizer-settings* collectables-needed-to-warp))
+        (format 0 "RANDOMIZER: warping from ~A...~%" (-> *level* level 0 name))
+        (warpToCheckpoint (the-as string (getNextCheckpoint)))
+        (set! (-> *rando-state* collectable-interval) 0)
+        )
+      )
+    (begin
+      (format 0 "RANDOMIZER: skipping collectable/warp as we're already blackout. ~D ~D ~%" (current-time) (-> *game-info* blackout-time))
+      )
+    )
+
+  ;; update backup-next-idx, commit to file in case of crash/closed window
+  (set! (-> *randomizer-settings* backup-next-idx) (-> *rando-state* next-idx))
+  (commit-to-file *randomizer-settings*)
+  ;;(suspend)
+  (none)
+  )
+
+(defun checkpointListTest ()
+  ;; If we have random-seed on, update our current seed.
+  (if (-> *randomizer-settings* use-random-seed?)
+    (set! (-> *randomizer-settings* current-seed) (knuth-rand-next-int))
+    )
+  ;; Generate a list of checkpoints based on our new updated current-seed
+  (generateCheckpointList (-> *randomizer-settings* current-seed) *rando-list-length*)
+  ;; Print this list of checkpoints to REPL for debugging purposes
+  (-> *rando-state* checkpoint-list)
+  )

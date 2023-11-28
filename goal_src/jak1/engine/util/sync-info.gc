@@ -455,9 +455,9 @@
     ;; only update if enough time has passed.
     (set-time! (-> this start-time))
     ;; come up with a random end time.
-    (set! (-> this timer) (rand-vu-int-range (-> this min-time) (-> this max-time)))
+    (set! (-> this timer) (mod-rand-int-range (-> this min-time) (-> this max-time)))
     ;; come up with a random value in (-max, max)
-    (set! (-> this value) (rand-vu-float-range (- (-> this max-val)) (-> this max-val)))
+    (set! (-> this value) (mod-rand-float-range (- (-> this max-val)) (-> this max-val)))
     )
   (-> this value)
   )
@@ -578,10 +578,10 @@
 (defmethod update-now! ((this delayed-rand-vector))
   "update to a random value now"
   (set-time! (-> this start-time))
-  (set! (-> this timer) (rand-vu-int-range (-> this min-time) (-> this max-time)))
-  (set! (-> this value x) (rand-vu-float-range (- (-> this xz-max)) (-> this xz-max)))
-  (set! (-> this value y) (rand-vu-float-range (- (-> this y-max)) (-> this y-max)))
-  (set! (-> this value z) (rand-vu-float-range (- (-> this xz-max)) (-> this xz-max)))
+  (set! (-> this timer) (mod-rand-int-range (-> this min-time) (-> this max-time)))
+  (set! (-> this value x) (mod-rand-float-range (- (-> this xz-max)) (-> this xz-max)))
+  (set! (-> this value y) (mod-rand-float-range (- (-> this y-max)) (-> this y-max)))
+  (set! (-> this value z) (mod-rand-float-range (- (-> this xz-max)) (-> this xz-max)))
   (-> this value)
   )
 

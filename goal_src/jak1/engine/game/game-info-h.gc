@@ -108,6 +108,7 @@
   (contf09)
   (game-start)
   (sage-ecorocks)
+  (additional-disabled)
   )
 
 ;; static data for a continue point
@@ -182,6 +183,10 @@
    (death-pos              vector-array)
    (dummy                  basic)
    (auto-save-count        int32)
+   (green-eco-total        float)
+   (blue-eco-total         float)
+   (red-eco-total          float)
+   (yellow-eco-total       float)
    )
   (:methods
     (initialize! (_type_ symbol game-save string) _type_)
@@ -204,6 +209,7 @@
     (clear-text-seen! (_type_ text-id) none)
     (get-death-count (_type_ symbol) int)
     (get-health-percent-lost (_type_ symbol) float)
+    (reset! (_type_ symbol game-save string) _type_)
     )
   )
 

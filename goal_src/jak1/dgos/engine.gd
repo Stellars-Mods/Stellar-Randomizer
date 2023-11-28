@@ -21,8 +21,6 @@
   "euler.o"
   "geometry.o"
   "trigonometry.o"
-
-
   "gsound-h.o"
   "timer-h.o"
   "timer.o"
@@ -278,11 +276,16 @@
   "water.o"
   "collectables-part.o"
   "collectables.o"
+  "mods-common.o"
+  "checkpoint-randomizer.o"
+  "jak-size.o"
+  "localmulti.o"
   "task-control.o"
   "process-taskable.o"
   "pov-camera.o"
   "powerups.o"
   "crates.o"
+  "moving-items-library.o"
   "hud.o"
   "hud-classes.o"
   "progress-static.o"
@@ -308,7 +311,6 @@
   "default-menu.o"
   "anim-tester-x.o" ;; added
   "entity-debug.o" ;; added
-  "subtitle.o" ;; added
-  "default-menu-pc.o" ;; added
- ))
-
+  "subtitle.o"  ;; added
+  "default-menu-pc.o"  ;; added
+  ))

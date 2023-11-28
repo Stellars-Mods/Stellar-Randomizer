@@ -1386,7 +1386,7 @@
   :code (behavior ()
     (loop
       (ja-channel-push! 1 (seconds 0.1))
-      (let ((v1-0 (rand-vu-int-range 0 2)))
+      (let ((v1-0 (mod-rand-int-range 0 2)))
         (cond
           ((zero? v1-0)
            (ja-no-eval :group! ogreboss-village2-idle-ja :num! (seek! (ja-aframe 140.0 0)) :frame-num 0.0)

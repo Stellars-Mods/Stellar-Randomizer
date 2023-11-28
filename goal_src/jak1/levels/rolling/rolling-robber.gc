@@ -320,6 +320,9 @@
 (defstate robber-die (robber)
   :event process-drawable-death-event-handler
   :code (behavior ()
+    (if (-> *challenges-settings* challenges-pacifist?)
+      (reset-all)
+      )
     (let ((gp-0 #t))
       (when (robber-task-complete?)
         (let ((v1-3 (-> self entity extra perm)))

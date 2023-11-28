@@ -1661,7 +1661,10 @@
                (ja-channel-set! 1)
                (ja :group! eichar-flut-smack-surface-ja :num! min)
                )
-             (sound-play "smack-surface")
+            (sound-play "smack-surface")
+            (if (-> *challenges-settings* challenges-bonkless?)
+              (reset-all)
+              )
              (sound-play "flut-hit" :pitch 1)
              )
             (else

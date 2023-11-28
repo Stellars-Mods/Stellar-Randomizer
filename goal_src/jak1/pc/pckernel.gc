@@ -243,7 +243,7 @@
     (set! (-> info money-total) (&-> *game-info* money-total))
     (set! (-> info buzzer-total) (&-> *game-info* buzzer-total))
     (set! (-> info deaths) (&-> *game-info* total-deaths))
-    (set! (-> info status) "Playing Jak and Daxter: The Precursor Legacy™")
+    (set! (-> info status) "Playing Jak™ Checkpoint Randomizer")
     (set! (-> info level) (symbol->string (-> (level-get-target-inside *level*) name))) ;; grab the name of level we're in
     (set! (-> info cutscene?) (real-movie?))
     (set! (-> info ogreboss?) (aif (process-by-ename "ogreboss-1") (case (-> it next-state name) (
@@ -577,10 +577,20 @@
 ;;;; PC settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+;; This is the settings object, all new settings types must be initalized here.
+(define-once *randomizer-settings* (new 'global 'randomizer-settings))
+(define-once *challenges-settings* (new 'global 'challenges-settings))
+(define-once *mods-settings* (new 'global 'mods-settings))
 (define-once *pc-settings* (new 'global 'pc-settings-jak1))
 
-
+;; This function updates all settings files, if a new settings type is added it needs to be added to this function.
+(defun commit-all-files ()
+  (commit-to-file *pc-settings*)
+  (commit-to-file *randomizer-settings*)
+  (commit-to-file *challenges-settings*)
+  (commit-to-file *mods-settings*)
+)
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; other
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -602,4 +612,3 @@
 
 ;; the actor pool for PC processes! it has space for 4 processes, with 16K of space.
 (define *pc-dead-pool* (new 'global 'dead-pool 4 (* 16 1024) '*pc-dead-pool*))
-
