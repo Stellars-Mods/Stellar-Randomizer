@@ -223,7 +223,7 @@
     (collectable-count int)
     )
   (:methods
-    (new (symbol type int) _type_ 0)
+    (new (symbol type int) _type_)
     )
   )
   
@@ -255,7 +255,7 @@
           (str-y (the int 60)))
       (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug))
         (draw-string-xy (string-format "~D/~D" (the int (-> *rando-state* collectable-interval)) (the int (-> *randomizer-settings* collectables-needed-to-warp)))
-          buf str-x str-y (font-color white) (font-flags shadow kerning large left))
+          buf str-x str-y (font-color white) (font-flags shadow kerning large))
         )
       )
     )

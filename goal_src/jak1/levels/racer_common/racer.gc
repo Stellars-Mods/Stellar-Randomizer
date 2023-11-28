@@ -423,7 +423,7 @@
   (set! (-> this auto-get-off) #f)
   (move-to-ground (-> this root) 40960.0 40960.0 #t (collide-kind background))
   (set! (-> this cell) (the-as handle #f))
-  (if (and (not *allow-zoomer-anywhere*) (not (enable-unlock-citadel-door-no-cells?))
+  (if (and (not *allow-zoomer-anywhere*) (not (enable-unlock-citadel-door-no-cells?)))
     (blocking-plane-spawn
       (the-as
         curve-control

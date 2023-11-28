@@ -450,10 +450,13 @@
              (-> *speedrun-info* should-display?))
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf))
                                       (bucket-id subtitle))
-      (draw-string-xy (string-format "Speedrunner Mode ~%~S ~%Category: ~S ~%Cutscene Skips ~A ~%Seed: ~D"
+      (draw-string-xy (string-format "Speedrunner Mode ~%~S ~%Category: ~S ~S ~%Seed: ~D"
                                     *mod-version-text*
-                                     (enum->string speedrun-category (-> *speedrun-info* category))
-                                     (-> *pc-settings* skip-movies?)
+                                    (enum->string speedrun-category (-> *speedrun-info* category))
+                                     (if (-> *randomizer-settings* checkpoint-randomizer?)
+                                        (if (-> *randomizer-settings* use-random-seed?) "random-seed" "set-seed")
+                                        ""
+                                        )
                                      (if (-> *randomizer-settings* checkpoint-randomizer?) (-> *randomizer-settings* current-seed) 0)
                                      )
                       buf 0 (- 220 (* 8 4)) (font-color flat-yellow) (font-flags shadow kerning))))
