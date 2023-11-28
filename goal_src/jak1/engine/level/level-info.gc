@@ -1227,7 +1227,7 @@
         :vis-nick 'vi3
         :lev0 'village3
         :disp0 'display
-        :lev1 'snow
+        :lev1 'maincave
         :disp1 #f
         )
       )
