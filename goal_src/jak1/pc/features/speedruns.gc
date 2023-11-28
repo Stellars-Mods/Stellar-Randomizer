@@ -443,6 +443,10 @@
   (none))
 
 (define-extern *mod-version-text* string)
+(define category-str (new 'global 'string 64 (the-as string #f)))
+(define warps1-str (new 'global 'string 64 (the-as string #f)))
+(define warps2-str (new 'global 'string 64 (the-as string #f)))
+
 (defun speedrun-draw-settings ()
   "Draw speedrun related settings in the bottom left corner"
   (when (and (-> *pc-settings* speedrunner-mode?)
@@ -450,14 +454,39 @@
              (-> *speedrun-info* should-display?))
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf))
                                       (bucket-id subtitle))
-      (draw-string-xy (string-format "Speedrunner Mode ~%~S ~%Category: ~S ~S ~%Seed: ~D"
+      (draw-string-xy 
+        (cond
+          ((-> *randomizer-settings* checkpoint-randomizer?)
+            (format (clear category-str) "~S ~S ~S" 
+                                          (enum->string speedrun-category (-> *speedrun-info* category))
+                                          (if (-> *randomizer-settings* use-random-seed?) "random-seed" "set-seed")
+                                          (if (= (-> *randomizer-settings* checkpoint-logic) 'logic-random-level) "random-level" "random-checkpoint"))
+            (format (clear warps1-str) "~S~S~S~S~S" 
+                                          (if (-> *randomizer-settings* warp-on-cell?) "C" "")
+                                          (if (-> *randomizer-settings* warp-on-orb?) "O" "")
+                                          (if (-> *randomizer-settings* warp-on-buzzer?) "F" "")
+                                          (if (-> *randomizer-settings* warp-on-green-eco?) "G" "")
+                                          (if (-> *randomizer-settings* warp-on-blue-eco?) "B" ""))
+            (format (clear warps2-str) "~S~S~S~S~D" 
+                                          (if (-> *randomizer-settings* warp-on-red-eco?) "R" "")
+                                          (if (-> *randomizer-settings* warp-on-yellow-eco?) "Y" "")
+                                          (if (-> *randomizer-settings* warp-on-eco-vents?) "V" "")
+                                          (if (-> *randomizer-settings* warp-on-death?) "D" "")
+                                          (the int (-> *randomizer-settings* collectables-needed-to-warp)))
+            (string-format "Speedrunner Mode ~%~S ~%Category: ~S ~S~S ~%Seed: ~D"
+                                    *mod-version-text*
+                                    category-str
+                                    warps1-str
+                                    warps2-str
+                                    (-> *randomizer-settings* current-seed)
+                                    )
+            )
+          (else
+            (string-format "Speedrunner Mode ~%~S ~%Category: ~S N/A ~%Seed: N/A"
                                     *mod-version-text*
                                     (enum->string speedrun-category (-> *speedrun-info* category))
-                                     (if (-> *randomizer-settings* checkpoint-randomizer?)
-                                        (if (-> *randomizer-settings* use-random-seed?) "random-seed" "set-seed")
-                                        ""
-                                        )
-                                     (if (-> *randomizer-settings* checkpoint-randomizer?) (-> *randomizer-settings* current-seed) 0)
-                                     )
-                      buf 0 (- 220 (* 8 4)) (font-color flat-yellow) (font-flags shadow kerning))))
+                                    )
+            )
+          )
+          buf 0 (- 220 (* 8 4)) (font-color flat-yellow) (font-flags shadow kerning))))
   (none))
