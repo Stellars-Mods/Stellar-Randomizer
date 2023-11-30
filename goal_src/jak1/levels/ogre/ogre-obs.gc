@@ -832,7 +832,7 @@
       )
     (ja-no-eval :group! ogre-bridge-assemble-ja :num! (seek!) :frame-num 0.0)
     (until (ja-done? 0)
-      (if (mod-rand-percent? 0.2)
+      (if (rand-vu-percent? 0.2)
           (spawn-projectile-blue *target*)
           )
       (suspend)

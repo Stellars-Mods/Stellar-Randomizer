@@ -70,7 +70,7 @@
            )
           ((ja-group? eichar-attack-from-stance-ja)
            (cond
-             ((mod-rand-percent? 0.3)
+             ((rand-vu-percent? 0.3)
               (ja-no-eval :group! eichar-attack-from-stance-alt-end-ja :num! (seek!) :frame-num 0.0)
               (until (ja-done? 0)
                 (suspend)
@@ -104,7 +104,7 @@
           ((ja-group? eichar-attack-punch-ja)
            (set! (-> self control unknown-float81) (-> self control unknown-float80))
            (set! (-> self control unknown-surface00) *walk-no-turn-mods*)
-           (ja-no-eval :group! (if (mod-rand-percent? 0.3)
+           (ja-no-eval :group! (if (rand-vu-percent? 0.3)
                                   eichar-attack-punch-alt-end-ja
                                   eichar-attack-punch-end-ja
                                   )

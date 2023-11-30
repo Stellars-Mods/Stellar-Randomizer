@@ -350,7 +350,7 @@
 
 (defmethod init-from-entity! ((this whirlpool) (arg0 entity-actor))
   (local-vars (sv-16 res-tag))
-  (set! (-> this spin-ry) (mod-rand-float-range 0.0 65536.0))
+  (set! (-> this spin-ry) (rand-vu-float-range 0.0 65536.0))
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum hit-by-player))))
     (let ((s3-0 (new 'process 'collide-shape-prim-sphere s4-0 (the-as uint 0))))
       (set! (-> s3-0 prim-core collide-as) (collide-kind wall-object))

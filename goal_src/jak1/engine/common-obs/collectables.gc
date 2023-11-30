@@ -275,9 +275,9 @@
                   )
                 )
          )
-    (+! (-> arg0 x) (mod-rand-float-range (- f30-0) f30-0))
-    (+! (-> arg0 y) (mod-rand-float-range (- f30-0) f30-0))
-    (+! (-> arg0 z) (mod-rand-float-range (- f30-0) f30-0))
+    (+! (-> arg0 x) (rand-vu-float-range (- f30-0) f30-0))
+    (+! (-> arg0 y) (rand-vu-float-range (- f30-0) f30-0))
+    (+! (-> arg0 z) (rand-vu-float-range (- f30-0) f30-0))
     )
   arg0
   )
@@ -328,7 +328,7 @@
           (let ((s2-0 (-> self root root-prim prim-core))
                 (gp-2 (-> v1-6 root-prim prim-core))
                 )
-            (if (and arg1 (mod-rand-percent? (the-as float 0.25)))
+            (if (and arg1 (rand-vu-percent? (the-as float 0.25)))
                 (eco-blue-glow (the-as vector s2-0))
                 )
             (let ((f0-0 (vector-vector-distance (the-as vector s2-0) (the-as vector gp-2))))
@@ -614,7 +614,7 @@
   :enter (behavior ((arg0 handle))
     (set! (-> self target) arg0)
     (set! (-> self speed quad) (the-as uint128 0))
-    (set! (-> self speed z) (the-as float (if (mod-rand-percent? (the-as float 0.5))
+    (set! (-> self speed z) (the-as float (if (rand-vu-percent? (the-as float 0.5))
                                               1.0
                                               -1.0
                                               )
@@ -2510,11 +2510,11 @@
         (set! s3-0 (pickup-type eco-pill))
         (set! f30-0
               (cond
-                ((and (= s1-0 1) *target* (and (>= 1.0 (-> *target* fact health)) (mod-rand-percent? (the-as float 0.1))))
+                ((and (= s1-0 1) *target* (and (>= 1.0 (-> *target* fact health)) (rand-vu-percent? (the-as float 0.1))))
                  (set! s3-0 (pickup-type eco-green))
                  1.0
                  )
-                ((and (< 1 s1-0) *target* (and (>= 2.0 (-> *target* fact health)) (mod-rand-percent? (the-as float 0.05))))
+                ((and (< 1 s1-0) *target* (and (>= 2.0 (-> *target* fact health)) (rand-vu-percent? (the-as float 0.05))))
 
                  (set! s3-0 (pickup-type eco-green))
                  1.0
@@ -2527,10 +2527,10 @@
                  1.0
                  )
                 ((type-type? (-> this type) fact-info-enemy)
-                 (+ (mod-rand-float-range (the-as float 3.0) (+ 5.0 f30-0)) (the float arg3))
+                 (+ (rand-vu-float-range (the-as float 3.0) (+ 5.0 f30-0)) (the float arg3))
                  )
                 (else
-                  (+ (mod-rand-float-range (the-as float 2.0) (+ 3.0 f30-0)) (the float arg3))
+                  (+ (rand-vu-float-range (the-as float 2.0) (+ 3.0 f30-0)) (the float arg3))
                   )
                 )
               )

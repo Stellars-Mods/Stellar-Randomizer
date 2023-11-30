@@ -896,7 +896,7 @@
   (initialize-skeleton this *hutlamp-sg* '())
   (set! (-> this pivot) (new 'process 'joint-mod-set-local this 3 #f #t #f))
   (set-period (-> this clock) 900)
-  (set! (-> this clock output) (mod-rand-next-float))
+  (set! (-> this clock output) (rand-vu))
   (go hutlamp-idle)
   (none)
   )

@@ -1403,7 +1403,7 @@
   (when (time-elapsed? (-> self turn-time) (-> self swing-time))
     (set-time! (-> self turn-time))
     (set! (-> self swing-time)
-          (mod-rand-int-range (the-as int (-> self params swing-min)) (the-as int (-> self params swing-max)))
+          (rand-vu-int-range (the-as int (-> self params swing-min)) (the-as int (-> self params swing-max)))
           )
     (set! (-> self params vel) (- (-> self params vel)))
     )
@@ -1424,7 +1424,7 @@
   (when (and (nonzero? (-> self params period)) (time-elapsed? (-> self spawn-time) (-> self params period)))
     (let ((gp-0
             (cond
-              ((mod-rand-percent? (-> self params powerup-percent))
+              ((rand-vu-percent? (-> self params powerup-percent))
                (if (and (time-elapsed? (-> self ambient-big-one) (seconds 30))
                         (play-ambient (-> self ambient) "FIS-TA03" #t (-> self root trans))
                         )
@@ -1432,10 +1432,10 @@
                    )
                'powerup
                )
-              ((mod-rand-percent? (-> self params bad-percent))
+              ((rand-vu-percent? (-> self params bad-percent))
                'bad
                )
-              ((mod-rand-percent? (-> self params deadly-percent))
+              ((rand-vu-percent? (-> self params deadly-percent))
                'deadly
                )
               (else

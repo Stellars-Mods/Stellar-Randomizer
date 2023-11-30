@@ -401,7 +401,7 @@
             (vector-reflect! (-> this root transv) (-> this root transv) s5-2)
             )
           (set! (-> this travel-ry) (atan (-> this root transv x) (-> this root transv z)))
-          (+! (-> this travel-ry) (mod-rand-float-range -910.2222 910.2222))
+          (+! (-> this travel-ry) (rand-vu-float-range -910.2222 910.2222))
           (vector-reset! (-> this root transv))
           (set! s5-1 #t)
           (set! (-> this bounced?) #t)
@@ -423,7 +423,7 @@
               (vector-reflect! (-> this root transv) (-> this root transv) s4-1)
               )
             (set! (-> this travel-ry) (atan (-> this root transv x) (-> this root transv z)))
-            (+! (-> this travel-ry) (mod-rand-float-range -910.2222 910.2222))
+            (+! (-> this travel-ry) (rand-vu-float-range -910.2222 910.2222))
             (vector-reset! (-> this root transv))
             #t
             (set! (-> this bounced?) #t)
@@ -440,7 +440,7 @@
   :event bully-default-event-handler
   :enter (behavior ((arg0 symbol))
     (set-time! (-> self state-time))
-    (set! (-> self reaction-delay) (mod-rand-int-range 0 (seconds 0.35)))
+    (set! (-> self reaction-delay) (rand-vu-int-range 0 (seconds 0.35)))
     (set! (-> self travel-speed) 0.0)
     (shut-down! (-> self neck))
     (let ((v1-5 (-> self draw shadow-ctrl)))
@@ -468,7 +468,7 @@
     (ja-channel-push! 1 (seconds 0.075))
     (if arg0
         (ja :group! bully-idle-ja
-            :num! (identity (mod-rand-float-range 0.0 (the float (+ (-> (ja-group) data 0 length) -1))))
+            :num! (identity (rand-vu-float-range 0.0 (the float (+ (-> (ja-group) data 0 length) -1))))
             )
         (ja :group! bully-idle-ja :num! min)
         )
@@ -498,7 +498,7 @@
   :code (behavior ()
     (set! (-> self travel-speed) 0.0)
     (ja-channel-push! 1 (seconds 0.075))
-    (set-vector! (-> self root transv) 0.0 (mod-rand-float-range 61440.0 90112.0) 0.0 1.0)
+    (set-vector! (-> self root transv) 0.0 (rand-vu-float-range 61440.0 90112.0) 0.0 1.0)
     (ja-no-eval :group! bully-notice-jump-up-ja :num! (seek! (ja-aframe 13.0 0)) :frame-num 0.0)
     (until (ja-done? 0)
       (suspend)
@@ -540,7 +540,7 @@
   :enter (behavior ()
     (set-time! (-> self state-time))
     (set-time! (-> self start-spin-time))
-    (set! (-> self slow-down) (mod-rand-int-range (seconds 4) (seconds 8)))
+    (set! (-> self slow-down) (rand-vu-int-range (seconds 4) (seconds 8)))
     (set! (-> self speed-u) 0.2)
     (set! (-> self bounced?) #f)
     (let ((gp-0 (new 'stack-no-clear 'vector)))
@@ -550,7 +550,7 @@
           )
       (set! (-> self travel-ry) (atan (-> gp-0 x) (-> gp-0 z)))
       )
-    (+! (-> self travel-ry) (mod-rand-float-range -910.2222 910.2222))
+    (+! (-> self travel-ry) (rand-vu-float-range -910.2222 910.2222))
     )
   :trans (behavior ()
     (when *target*
@@ -632,7 +632,7 @@
   :event bully-default-event-handler
   :enter (behavior ()
     (set-time! (-> self state-time))
-    (set! (-> self reaction-delay) (mod-rand-int-range (seconds 2) (seconds 3)))
+    (set! (-> self reaction-delay) (rand-vu-int-range (seconds 2) (seconds 3)))
     (set! (-> self travel-speed) 0.0)
     (set! (-> self bounced?) #f)
     )

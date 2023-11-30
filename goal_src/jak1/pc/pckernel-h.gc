@@ -342,7 +342,7 @@
   (format 0 "resetting randomizer settings~%")
 
   (set! (-> obj version) RANDO_SETTINGS_VERSION)
-  (set! (-> obj checkpoint-randomizer?) #f)
+  (set! (-> obj checkpoint-randomizer?) #t)
   (set! (-> obj collectables-needed-to-warp) 1.0)
   (set! (-> obj show-warp-counter?) #f)
   (set! (-> obj use-random-seed?) #t)
@@ -358,7 +358,7 @@
   (set! (-> obj warp-on-eco-vents?) #f)
   (set! (-> obj warp-on-death?) #f)
   (set! (-> obj rng-lib) 'mod-rand)
-  (set! (-> obj checkpoint-logic) 'logic-random-checkpoint)
+  (set! (-> obj checkpoint-logic) 'logic-random-level)
 
   (none))
 
