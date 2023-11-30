@@ -1151,15 +1151,15 @@
             ;; show cells/total collected this level
             (draw-string-xy-scaled
               (string-format 
-                "~D/~D"
+                "~D~%/~D"
                 completed-task-count
                 (-> *level-task-data* lvl-idx nb-of-tasks)
                 )
               buf
-              (- string-x 20)
-              (+ string-y 10)
+              string-x
+              (- string-y 5)
               (font-color yellow)
-              (font-flags shadow kerning middle large)
+              (font-flags shadow kerning large)
               0.8
               )
             )
