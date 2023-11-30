@@ -1111,6 +1111,7 @@
    )
   )
 
+(define cell-str (new 'global 'string 10 (the-as string #f)))
 
 (defmethod draw-hud ((this hud-fuel-cell))
   (let ((t9-0 (method-of-type hud draw-hud)))
@@ -1142,24 +1143,32 @@
           (let ((lvl-idx (-> *level-task-data-remap* (+ (-> *target* current-level info index) -1)))
                 (completed-task-count 0))
             ;; determine number of cells collected in this level
+            (clear cell-str)
             (dotimes (task-idx (-> *level-task-data* lvl-idx nb-of-tasks))
-              (if (= (get-task-status (-> *level-task-data* lvl-idx task-info task-idx task-id)) (task-status invalid))
-                (+! completed-task-count 1)
+              (cond
+                ((= (get-task-status (-> *level-task-data* lvl-idx task-info task-idx task-id)) (task-status invalid))
+                  (+! completed-task-count 1)
+                  (format cell-str "*")
+                  )
+                (else
+                  (format cell-str "-")
+                  )
                 )
-            )
+              )
 
             ;; show cells/total collected this level
             (draw-string-xy-scaled
               (string-format 
-                "~D~%/~D"
+                "~S~%~D/~D"
+                cell-str
                 completed-task-count
                 (-> *level-task-data* lvl-idx nb-of-tasks)
                 )
               buf
-              string-x
+              (- string-x 20)
               (- string-y 5)
               (font-color yellow)
-              (font-flags shadow kerning large)
+              (font-flags shadow kerning middle large)
               0.8
               )
             )
