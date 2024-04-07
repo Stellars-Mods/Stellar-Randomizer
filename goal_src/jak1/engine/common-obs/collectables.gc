@@ -765,7 +765,7 @@
       )
 
     (runs-on-eco-pickup (-> self fact pickup-type) (ppointer->process (-> self parent)))  ;; trigger hook for mod base
-    
+
     (if (nonzero? (-> self part))
         (kill-and-free-particles (-> self part))
         )
@@ -1112,7 +1112,7 @@
       )
     )
   )
-  
+
 (define-extern orb-cache-top (type))
 (defstate pickup (money)
   :virtual #t
@@ -1570,7 +1570,7 @@
         (spool-push *art-control* (-> self victory-anim name) 0 self (the-as float -99.0))
         )
       )
-    
+
     (send-event *target* 'get-pickup (-> self fact pickup-type) (-> self fact pickup-amount))
     (when (enable-powercell-cutscenes?)
       (set! (-> self draw bounds w) 32768.0)
@@ -1581,7 +1581,7 @@
       (add-setting! 'ambient-volume 'rel (-> *setting-control* current ambient-volume-movie) 0)
       (process-spawn othercam self 10 #f #t :to self)
       )
-   
+
     (auto-save-command 'auto-save 0 0 *default-pool*)
 
     ;; play powercell animation if randomizer disabled
@@ -1593,10 +1593,10 @@
         (the-as (function process-drawable symbol) false-func)
         ))
 
-    (when (and (not flutflut?) (not racer?)) 
+    (when (and (not flutflut?) (not racer?))
       (send-event *target* 'end-mode)
       )
-    
+
     (remove-setting! 'music-volume)
     (remove-setting! 'sfx-volume)
     (remove-setting! 'ambient-volume)
@@ -1607,7 +1607,7 @@
     (suspend)
     (suspend)
 
-    ;; warp to random checkpoint if randomizer enabled
+   ;; warp to random checkpoint if randomizer enabled
     (when (and (-> *randomizer-settings* checkpoint-randomizer?) (-> *randomizer-settings* warp-on-cell?))
       (orchestrateCheckpointWarp 1)
       )
@@ -2103,7 +2103,6 @@
     (logclear! (-> self mask) (process-mask actor-pause))
     (process-entity-status! self (entity-perm-status complete) #t)
     (sound-play "buzzer-pickup")
-    (runs-on-fly-pickup)
     (case (-> (level-get-target-inside *level*) name)
       (('training)
        (level-hint-spawn (text-id training-buzzer-hint) "asstvb44" (the-as entity #f) *entity-pool* (game-task none))
@@ -2180,6 +2179,7 @@
         (set! (-> gp-1 num-params) 1)
         (set! (-> gp-1 message) 'notify)
         (set! (-> gp-1 param 0) (the-as uint 'pickup))
+            (runs-on-fly-pickup)
         (let ((s5-3 send-event-function)
               (s4-2 (ppointer->process (-> self parent)))
               )
