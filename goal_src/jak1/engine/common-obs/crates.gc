@@ -655,6 +655,9 @@
     (suspend)
     (update-transforms! (-> self root))
     (logior! (-> self mask) (process-mask sleep))
+    (if (and (-> *randomizer-settings* warp-on-orb?) (= (-> self defense) 'steel))
+    (go-virtual die #f 0)
+    )
     (loop
       (suspend)
       )
