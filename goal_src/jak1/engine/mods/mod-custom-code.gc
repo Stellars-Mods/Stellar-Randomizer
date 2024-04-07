@@ -23,13 +23,13 @@
 
     (defun runs-every-frame ()
       ;;(increase-power-cell-by-one) This is a call to increase-power-cell-by-one defined in mod-common-functions.gc
-      
+
       (randomizer-run-each-frame)
       (jak-size-run-each-frame)
       (mods-common-run-each-frame)
       (localmulti-run-eachframe)
 
-      (if *show-input-display* 
+      (if *show-input-display*
         (input-display-on)
         (input-display-off)
         )
@@ -43,12 +43,12 @@
 
         ;; if the randomizer is on AND set to warp on orbs AND this isn't from an orb cache, warp the target.
         ;; see orb-cache.gc for how those warps are handled
-        (when (and  (-> *randomizer-settings* checkpoint-randomizer?) 
+        (when (and  (-> *randomizer-settings* checkpoint-randomizer?)
                     (-> *randomizer-settings* warp-on-orb?)
                     (not from-cache?)
                   )
           (orchestrateCheckpointWarp 1)
-          ) 
+          )
 
         (when from-cache?
           ;; Code here runs only if the orb was from an orb cache
@@ -64,20 +64,20 @@
       )
 
     (defun runs-on-fly-pickup ()
-      ;; Code here runs on any scout fly pickup
+      ;; Code here runs on any non final scout fly pickup
       (when (and (-> *randomizer-settings* checkpoint-randomizer?) (-> *randomizer-settings* warp-on-buzzer?))
-        (orchestrateCheckpointWarp 1)
+       (orchestrateCheckpointWarp 1)
         )
       (none)
       )
 
     (defun runs-on-cell-pickup ((cell-event symbol))
       (case cell-event
-        (('pickup)      
+        (('pickup)
           ;; Code here runs as soon as you pickup a powercell
 
           )
-        (('cutscene-end)      
+        (('cutscene-end)
           ;; Code here runs at the end of any powercell cutscene
 
           )
@@ -87,9 +87,9 @@
       )
 
     (defun runs-on-eco-pickup ((eco-type pickup-type) (parent process-tree))
-      (when (and 
+      (when (and
                   (-> *randomizer-settings* checkpoint-randomizer?)
-                  (or 
+                  (or
                     (and (-> *randomizer-settings* warp-on-green-eco?) (= eco-type (pickup-type eco-green)))
                     (and (-> *randomizer-settings* warp-on-green-eco?) (= eco-type (pickup-type eco-pill)))
                     (and (-> *randomizer-settings* warp-on-blue-eco?) (= eco-type (pickup-type eco-blue)))
@@ -99,33 +99,33 @@
                 )
         (orchestrateCheckpointWarp 1)
         )
-      
+
       (let* ((from-vent? (and parent (type-type? (-> parent type) vent))))
         ;; Code here runs as soon as you pickup ANY eco
 
         (case eco-type
-          (((pickup-type eco-yellow))      
+          (((pickup-type eco-yellow))
             ;; Code here runs as soon as you pickup yellow eco
 
             )
-          (((pickup-type eco-red))      
+          (((pickup-type eco-red))
             ;; Code here runs as soon as you pickup red eco
 
             )
-          (((pickup-type eco-blue))      
+          (((pickup-type eco-blue))
             ;; Code here runs as soon as you pickup blue eco
 
             )
-          (((pickup-type eco-pill))      
+          (((pickup-type eco-pill))
             ;; Code here runs as soon as you pickup small green eco
 
             )
-          (((pickup-type eco-green))      
-            ;; Code here runs as soon as you pickup big green eco 
+          (((pickup-type eco-green))
+            ;; Code here runs as soon as you pickup big green eco
 
             )
           )
-        
+
         (when from-vent?
           ;; Code here runs only if the eco was picked up from a vent
 
@@ -137,7 +137,7 @@
 
     (defun runs-on-jak-spawn ()
       ;; Code here runs every time jak spawns (loading a file new game or death)
-      
+
       ;;uncomment this to use custom music for custom levels - the function is in mod-common-functions.gc
       ;;(process-spawn-function process music-manager-proc)
       (none)
@@ -147,14 +147,14 @@
       (case death-event
         (('dying)
           ;; Code here runs immediately every time jak dies, before any death animation or death cutscene
-          
+
           )
         (('blackout)
           ;; Code here runs after jak dies (and any death cutscene finishes), during the blackout before he spawns
 
           )
         )
-      
+
       (none)
       )
 
