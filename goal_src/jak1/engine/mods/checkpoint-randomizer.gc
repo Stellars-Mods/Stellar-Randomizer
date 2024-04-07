@@ -90,7 +90,7 @@
   )
   )
 
-(define *checkpoint-list-by-level-idx* 
+(define *checkpoint-list-by-level-idx*
   (new 'static 'boxed-array :type (array string) :length 16 :allocated-length 16
     ;; Geyser Rock
     (new 'static 'boxed-array :type string :length 2
@@ -226,7 +226,7 @@
     (new (symbol type int) _type_)
     )
   )
-  
+
 (defmethod new rando-state ((allocation symbol) (type-to-make type) (length int))
   "Allocate a new rando-state with a checkpoint list of given length"
   (let ((obj (object-new allocation type-to-make (the-as int (-> type-to-make size)))))
@@ -248,7 +248,7 @@
 
 (defun update-collectable-hud-counters ()
   (when (and (-> *randomizer-settings* show-warp-counter?)
-             (> (-> *rando-state* collectable-count) 0) 
+             (> (-> *rando-state* collectable-count) 0)
              (= *master-mode* 'game)
              (not (or (movie?) (< (-> *display* base-frame-counter) (-> *game-info* letterbox-time)))))
     (let ((str-x (the int (* 0.01 512)))
@@ -302,8 +302,8 @@
           (let ((random-level-idx (knuth-rand-int-range 0 (-> *checkpoint-list-by-level-idx* length))))
             ;; ...then choose random checkpoint within that level
             (let ((random-level-checkpoint-idx (knuth-rand-int-range 0 (-> *checkpoint-list-by-level-idx* random-level-idx length))))
-              (-> *checkpoint-list-by-level-idx* 
-                random-level-idx 
+              (-> *checkpoint-list-by-level-idx*
+                random-level-idx
                 random-level-checkpoint-idx
                 )
               )
@@ -326,7 +326,7 @@
   )
 
 (defun advanceCheckpointList ((n int))
-  (set! 
+  (set!
     (-> *rando-state* next-idx)
     (mod (+ (-> *rando-state* next-idx) n) *rando-list-length*)
     )
@@ -347,8 +347,8 @@
   (case-str checkpointName
     ;; avoid village1-warp if cutscene tasks not closed
     (("village1-warp")
-      (if (or 
-          (not (task-closed? (game-task intro) (task-status need-resolution))) 
+      (if (or
+          (not (task-closed? (game-task intro) (task-status need-resolution)))
           (not (task-closed? (game-task beach-ecorocks) (task-status need-introduction)))
           )
         (return #f)
@@ -374,7 +374,7 @@
         (format 0 "RANDOMIZER: checkpoint ~A is valid~%" checkpointName)
         (return checkpointName) ;; break from while loop
         )
-        
+
       (format 0 "RANDOMIZER: checkpoint ~A is NOT valid, will grab the next~%" checkpointName)
       (set! checkpointName (-> *rando-state* checkpoint-list (-> *rando-state* next-idx)))
       )
@@ -397,7 +397,7 @@
   (when (-> *randomizer-settings* use-random-seed?)
     (set! (-> *randomizer-settings* current-seed) (knuth-rand-next-int))
     )
-  
+
   ;; reset checkpoint counter backup
   (set! (-> *randomizer-settings* backup-next-idx) 0)
 
