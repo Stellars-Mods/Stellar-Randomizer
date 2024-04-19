@@ -59,6 +59,8 @@
   )
 
 (defbehavior fuel-cell-init-as-spline-slider fuel-cell ((arg0 handle) (arg1 float) (arg2 float) (arg3 int))
+
+     (when  (not (task-closed? (game-task rolling-robbers)(task-status need-resolution)))
   (initialize self)
   (set! (-> self fact pickup-type) (pickup-type fuel-cell))
   (set! (-> self fact pickup-amount) (the float arg3))
@@ -69,6 +71,7 @@
   (set! (-> self path) (new 'process 'curve-control self 'path -1000000000.0))
   (set! (-> self movie-pos-index) -1)
   (go fuel-cell-spline-slider arg0 arg1 arg2)
+     )
   (none)
   )
 
@@ -337,6 +340,7 @@
                               )
                           )
                    )
+
                (process-spawn
                  fuel-cell
                  :init fuel-cell-init-as-spline-slider
@@ -346,6 +350,8 @@
                  (-> self entity extra perm task)
                  :to self
                  )
+
+
                )
              )
             (else
@@ -354,7 +360,8 @@
               (let ((s5-1 (new 'stack-no-clear 'vector)))
                 (eval-path-curve! (-> self path) s5-1 (the-as float (-> v1-3 user-object 0)) 'interp)
                 (+! (-> s5-1 y) 8192.0)
-                (birth-pickup-at-point
+              (when (not (task-closed? (game-task rolling-robbers)(task-status need-resolution)))
+                 (birth-pickup-at-point
                   s5-1
                   (pickup-type fuel-cell)
                   (the float (-> self entity extra perm task))
@@ -362,7 +369,7 @@
                   self
                   (the-as fact-info #f)
                   )
-                )
+                ))
               )
             )
           )
