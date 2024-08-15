@@ -40,7 +40,7 @@ struct VagCmd {
   int spu_trap_mem_addr;          // 124
   int voice;                      // 128
   int idx_in_cmd_arr;             // 132 (index in VagCmds)
-  int unk_136;                    // 136
+  int sound_handler;              // 136 (989snd sound that played this stream)
   int unk_140;                    // 140
   int unk_176;                    // 176
   int unk_180;                    // 180
@@ -95,7 +95,7 @@ struct VagCmd {
   int priority;              // 284
   int unk_288;               // 288
   int unk_292;               // 292
-  int unk_296;               // 296
+  int unk_296;               // 296 (audio has world positioning)
   Vec3w vec3;                // 300
   int fo_min;                // 312 (init to 5)
   int fo_max;                // 316 (init to 316)
@@ -113,7 +113,7 @@ extern int TrapSRAM[N_VAG_CMDS];
 extern int StreamVoice[N_VAG_CMDS];
 
 extern int ActiveVagStreams;
-extern int MasterVolume[17];
+extern int MasterVolume[32];
 
 void vag_init_globals();
 

@@ -163,11 +163,11 @@
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this fort-dump-bomb-a) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (let ((v1-2 (new 'process 'collide-shape-prim-mesh s4-0 (the-as uint 0) (the-as uint 0))))
       (set! (-> v1-2 prim-core collide-as) (collide-spec bot))
@@ -409,6 +409,7 @@ This commonly includes things such as:
 
 ;; definition for method 10 of type fort-missile-target
 (defmethod deactivate ((this fort-missile-target))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (sound-stop (the-as sound-id (-> this sound-id)))
   (call-parent-method this)
   (none)
@@ -968,6 +969,7 @@ This commonly includes things such as:
 
 ;; definition for method 10 of type fort-missile
 (defmethod deactivate ((this fort-missile))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (set-fordumpc-light-flag! #f)
   (send-event (handle->process (-> this hud)) 'hide-and-die)
   (if (nonzero? (-> this part-doom))
@@ -979,22 +981,22 @@ This commonly includes things such as:
   )
 
 ;; definition for method 7 of type fort-missile
-(defmethod relocate ((this fort-missile) (arg0 int))
+(defmethod relocate ((this fort-missile) (offset int))
   (if (nonzero? (-> this part-doom))
-      (&+! (-> this part-doom) arg0)
+      (&+! (-> this part-doom) offset)
       )
-  (call-parent-method this arg0)
+  (call-parent-method this offset)
   )
 
 ;; definition for method 11 of type fort-missile
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this fort-missile) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (stack-size-set! (-> this main-thread) 512)
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (let ((s3-0 (new 'process 'collide-shape-prim-group s4-0 (the-as uint 2) 0)))

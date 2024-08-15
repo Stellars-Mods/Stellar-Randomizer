@@ -593,7 +593,7 @@
 ;; WARN: Return type mismatch int vs none.
 (defmethod aim-turret! ((this sew-gunturret) (aim-at-target? symbol))
   "Calculates the angle and tilt for the turret to either aim at the target, or it's default direction
-@param aim-at-target? Whether or not the turret should aim at the target, will ignore the target if #f"
+   @param aim-at-target? Whether or not the turret should aim at the target, will ignore the target if #f"
   (cond
     ((and aim-at-target? (-> this los-clear))
      (let ((target-proc (handle->process (-> this focus handle))))
@@ -722,7 +722,7 @@
 ;; INFO: Used lq/sq
 (defmethod fire-turret! ((this sew-gunturret) (fire-sound? symbol))
   "Actually fires the turret, sets `flash-state` to [[#t]]
-@param fire-sound? Whether to play the fire sound effect or not"
+   @param fire-sound? Whether to play the fire sound effect or not"
   (let ((v1-4 (vector<-cspace! (new 'stack-no-clear 'vector) (-> this node-list data (-> this params gun-joint))))
         (proj-params (new 'stack-no-clear 'projectile-init-by-other-params))
         )
@@ -784,7 +784,7 @@
     (set! (-> self flash-state) #f)
     )
   :trans (behavior ()
-    (if (and (logtest? (-> self enemy-flags) (enemy-flag look-at-focus)) (-> self enemy-info use-victory))
+    (if (and (logtest? (-> self enemy-flags) (enemy-flag victory)) (-> self enemy-info use-victory))
         (go-virtual victory)
         )
     (when (time-elapsed? (-> self state-time) (-> self reaction-time))
@@ -872,7 +872,7 @@
 ;; definition for method 74 of type sew-gunturret
 (defmethod general-event-handler ((this sew-gunturret) (proc process) (arg2 int) (event-type symbol) (event event-message-block))
   "Handles various events for the enemy
-@TODO - unsure if there is a pattern for the events and this should have a more specific name"
+   @TODO - unsure if there is a pattern for the events and this should have a more specific name"
   (if (and (= event-type 'notify) (< 1 arg2) (= (-> event param 0) 'attack) (= (-> event param 1) *target*))
       (set-time! (-> this last-hit-time))
       )
@@ -910,7 +910,7 @@
 (defstate die (sew-gunturret)
   :virtual #t
   :enter (behavior ()
-    (dispose! self)
+    (dying self)
     (let ((root-prim (-> self root root-prim)))
       (set! (-> root-prim prim-core collide-as) (collide-spec))
       (set! (-> root-prim prim-core collide-with) (collide-spec))
@@ -956,7 +956,7 @@
       )
     )
   :post (behavior ()
-    (track-target! self)
+    (common-post self)
     )
   )
 
@@ -1025,10 +1025,10 @@
 ;; definition for method 98 of type sew-gunturret
 (defmethod in-aggro-range? ((this sew-gunturret) (proc process-focusable) (arg1 vector))
   "Should the enemy activate.
-- if `activate-distance` is `0.0`, always true
-- otherwise, check if the provided process is close enough
-@param proc The process used to distance check
-@returns true/false"
+   - if `activate-distance` is `0.0`, always true
+   - otherwise, check if the provided process is close enough
+   @param proc The process used to distance check
+   @returns true/false"
   (cond
     ((= (-> this activate-distance) 0.0)
      (return #t)
@@ -1049,6 +1049,7 @@
 
 ;; definition for method 10 of type sew-gunturret
 (defmethod deactivate ((this sew-gunturret))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (if (nonzero? (-> this smoke-part))
       (kill-and-free-particles (-> this smoke-part))
       )
@@ -1067,17 +1068,17 @@
 
 ;; definition for method 7 of type sew-gunturret
 ;; WARN: Return type mismatch enemy vs sew-gunturret.
-(defmethod relocate ((this sew-gunturret) (arg0 int))
+(defmethod relocate ((this sew-gunturret) (offset int))
   (if (nonzero? (-> this gun-tilt-jm))
-      (&+! (-> this gun-tilt-jm) arg0)
+      (&+! (-> this gun-tilt-jm) offset)
       )
   (if (nonzero? (-> this smoke-part))
-      (&+! (-> this smoke-part) arg0)
+      (&+! (-> this smoke-part) offset)
       )
   (if (nonzero? (-> this casing-part))
-      (&+! (-> this casing-part) arg0)
+      (&+! (-> this casing-part) offset)
       )
-  (the-as sew-gunturret ((method-of-type enemy relocate) this arg0))
+  (the-as sew-gunturret ((method-of-type enemy relocate) this offset))
   )
 
 ;; definition for method 141 of type sew-gunturret
@@ -1118,7 +1119,7 @@
   (initialize-skeleton this (-> this params normal-sg) (the-as pair 0))
   (init-enemy-behaviour-and-stats! this (-> this params enemy-info))
   (logclear! (-> this mask) (process-mask actor-pause))
-  (logclear! (-> this enemy-flags) (enemy-flag notice))
+  (logclear! (-> this enemy-flags) (enemy-flag actor-pause-backup))
   (set! (-> this part) (create-launch-control (-> *part-group-id-table* 1126) this))
   (set! (-> this smoke-part) (create-launch-control (-> *part-group-id-table* 1127) this))
   (set! (-> this casing-part) (create-launch-control (-> *part-group-id-table* 1128) this))

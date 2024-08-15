@@ -1,9 +1,7 @@
 ;;-*-Lisp-*-
 (in-package goal)
-
-;; name: text-h.gc
-;; name in dgo: text-h
-;; dgos: GAME, ENGINE
+(bundles "ENGINE.CGO" "GAME.CGO")
+(require "kernel/gkernel-h.gc")
 
 ;; This file contains types related to game text.
 ;; Each game string is assigned an ID number.
@@ -14,7 +12,7 @@
 (defenum text-id
   :type uint32
   :bitfield #f
-;; GAME-TEXT-ID ENUM BEGINS
+  ;; GAME-TEXT-ID ENUM BEGINS
   (zero 0)
   (one 1)
   (confirm #x103)
@@ -68,7 +66,6 @@
   (memcard-do-not-remove #x138)
   (overwrite? #x139)
   (format? #x13a)
-
   (yes #x13c)
   (no #x13d)
   (back #x13e)
@@ -116,7 +113,6 @@
   (quit-game #x16f)
   (quit? #x170)
   (total-collected #x171)
-
   (village1-mayor-money #x200)
   (village1-uncle-money #x201)
   (village1-yakow-herd #x202)
@@ -173,26 +169,19 @@
   (sidekick-hint-oracle #x235)
   (sidekick-hint-seagulls #x236)
   (sidekick-hint-pelican #x237)
-
   (sidekick-hint-ecorocks #x239)
   (sidekick-hint-mistycannon #x23a)
   (sidekick-hint-dive #x23b)
   (sidekick-hint-rounddoor #x23c)
   (sidekick-hint-lurkerm #x23d)
   (sidekick-hint-tower #x23e)
-  
   (sidekick-reminder-fish #x240)
-
   (firecanyon-need-cells #x24f)
-
   (sidekick-hint-orb-cache-top #x251)
-
   (sidekick-hint-precurbridge #x25b)
   (sidekick-hint-launcher #x25c)
-
   (jungle-lurkerm-resolution #x25e)
   (jungle-lurkerm-hint #x25f)
-
   (beach-gimmie #x262)
   (beach-sentinel #x263)
   (jungle-canyon-end #x264)
@@ -204,16 +193,11 @@
   (sidekick-seagulls2 #x26a)
   (sidekick-seagulls3 #x26b)
   (sidekick-seagulls4 #x26c)
-
   (sidekick-warehouse #x26e)
   (sidekick-misty #x26f)
-
   (beach-seagulls-avalanche #x273)
-
   (beach-pelican-quick-get-cell #x274)
-
   (beach-flutflutegg-hint #x275)
-
   (sidekick-hint-fish-powerup #x278)
   (misty-bike-hint #x27e)
   (misty-bike-mines-hint #x27f)
@@ -229,7 +213,6 @@
   (jungle-eggtop-resolution #x289)
   (misty-cannon-resolution #x28a)
   (misty-bike-resolution #x28b)
-
   (sidekick-hint-crate-steel-break2 #x28e)
   (sidekick-hint-crate-darkeco2 #x28f)
   (sidekick-launcher1 #x290)
@@ -240,31 +223,25 @@
   (sidekick-hint-buzzer3 #x295)
   (sidekick-buzzer-resolution #x296)
   (village1-yakow-resolution #x297)
-
   (sidekick-hint-periscope #x29c)
   (sidekick-hint-reflector-mirror #x29d)
   (sidekick-hint-aphid #x29e)
   (sidekick-hint-periscope2 #x29f)
   (sidekick-hint-periscope3 #x2a0)
   (sidekick-hint-eco-door #x2a1)
-
   (misty-teetertotter #x2a4)
   (misty-eco-red-hint #x2a5)
   (misty-eco-red-first-use #x2a6)
   (misty-eco-plat #x2a7)
-
   (fish? #x2a9)
   (misty-bone-bridge-hint #x2aa)
-
   (beach-grottopole-increment #x2af)
-
   (village1cam-enough-cells #x2b1)
   (village1cam-enough-cells2 #x2b2)
   (firecanyon-need-cells-text #x2b3)
   (caught #x2b4)
   (missed #x2b5)
   (lose! #x2b6)
-
   (village2-gambler-money #x300)
   (village2-geologist-money #x301)
   (village2-warrior-money #x302)
@@ -306,7 +283,6 @@
   (sunken-room-resolution #x326)
   (rolling-robbers-resolution #x327)
   (swamp-flutflut-resolution #x328)
-
   (rolling-race-beat-record #x335)
   (sidekick-hint-crate-darkeco-rolling #x336)
   (rolling-moles-hint #x337)
@@ -364,7 +340,6 @@
   (swamp-arm-resolution #x36b)
   (village2-levitator-need-cells #x36c)
   (village2-levitator-find-cells #x36d)
-
   (village2-button-reminder #x36f)
   (village2-button-reminder2 #x370)
   (village2-button-reminder3 #x371)
@@ -374,7 +349,6 @@
   (new-record #x375)
   (try-again #x376)
   (race-aborted #x377)
-
   (village3-miner-money #x400)
   (village3-oracle-money #x401)
   (snow-ram-3-left #x402)
@@ -412,7 +386,6 @@
   (snow-birds #x422)
   (cave-spider-tunnel #x423)
   (cave-platforms #x424)
-
   (cave-swing-poles #x426)
   (assistant-lavatube-hint #x427)
   (assistant-lavatube-need-cells #x428)
@@ -420,7 +393,6 @@
   (gondola-enough-cells #x42a)
   (snow-cage #x42b)
   (snow-bumpers #x42c)
-
   (cave-dark-crystals-resolution #x432)
   (cave-gnawers-look-around #x433)
   (cave-darkeco #x434)
@@ -457,7 +429,6 @@
   (village3-button-reminder2 #x453)
   (village3-button-reminder3 #x454)
   (assistant-lavatube-need-cells-text #x455)
-
   (firecanyon-end #x500)
   (firecanyon-buzzer #x501)
   (firecanyon-balloon-hint #x502)
@@ -481,14 +452,12 @@
   (firecanyon-heat-warning9 #x514)
   (firecanyon-end-resolution #x515)
   (firecanyon-buzzer-hint #x516)
-
   (ogre-end #x600)
   (ogre-buzzer #x601)
   (ogre-poi-ogre #x602)
   (ogre-boss #x603)
   (ogre-boss-resolution #x604)
   (ogre-race-hint #x605)
-
   (ogre-race-introduction #x607)
   (ogre-tnt-hint #x608)
   (ogre-race-ahead-hint #x609)
@@ -512,7 +481,6 @@
   (ogre-race-end-almost-losing #x61b)
   (ogre-plunger-lurker-resolution #x61c)
   (ogre-race-resolution #x61d)
-
   (lavatube-end #x700)
   (lavatube-buzzer #x701)
   (lavatube-hurry #x702)
@@ -531,7 +499,6 @@
   (lavatube-balls-resolution #x710)
   (lavatube-tunnel3 #x711)
   (lavatube-end-resolution #x712)
-
   (citadel-buzzer #x800)
   (citadel-level-name #x801)
   (citadel-sage-blue #x802)
@@ -552,7 +519,6 @@
   (citadel-hub2 #x811)
   (citadel-launcher2 #x812)
   (citadel-battle-end #x813)
-
   (training-voicebox #x900)
   (training-money #x901)
   (training-fuel-cell #x902)
@@ -585,10 +551,8 @@
   (training-door-task-name #x91d)
   (training-climb-task-name #x91e)
   (training-level-name #x91f)
-
   (inc #xf10)
   (europe #xf11)
-
   ;; extra IDs for pc port
   (camera-options               #x1000)
   (normal                       #x1001)
@@ -803,7 +767,6 @@
   (speedrun-il-cave              #x151c)
   (speedrun-il-lavatube          #x151d)
   (speedrun-il-citadel           #x151e)
-
   (speedrun-new-cat-ext          #x151f)
   (speedrun-new-game-plus        #x1520)
   (speedrun-hub1-100             #x1521)
@@ -886,7 +849,56 @@
   (checkpoint-swamp-flutflut    #x1755)
   (checkpoint-village3-cart     #x1756)
 
-  ;; mod text
+  ;; Mod Options
+  (mod-options                  #x1700)
+  (checkpoint-randomizer        #x1701)
+  (custom-challenges            #x1702)
+  (rng-lib                      #x1703)
+  (mod-powercellcutscenes       #x1704)
+  (additional-checkpoints       #x1705)
+  
+  ;; Checkpoint Randomizer
+  (item-count-to-trigger-warp   #x1710)
+  (use-random-seed?             #x1711)
+  (randomizer-random-seed       #x1712)
+  (randomizer-set-seed          #x1713)
+  (randomizer-warp-options      #x1714)
+  (checkpoint-warpcells?        #x1715)
+  (checkpoint-warporbs?         #x1716)
+  (checkpoint-warpbuzzer?       #x1717)
+  (checkpoint-warpgreeneco?     #x1718)
+  (checkpoint-warpblueeco?      #x1719)
+  (checkpoint-warpredeco?       #x171a)
+  (checkpoint-warpyelloweco?    #x171b)
+  (checkpoint-warpecovents?     #x171c)
+  (checkpoint-warpdeath?        #x171d)
+  (show-warp-counter?           #x171e)
+  (checkpoint-logic             #x171f)
+  (logic-random-checkpoint      #x1720)
+  (logic-random-level           #x1721)
+
+  ;;Challenges
+  (challenges-orbless           #x1730)
+  (challenges-hardcore          #x1731)
+  (challenges-damageless        #x1732)
+  (challenges-bonkless          #x1733)
+  (challenges-casual            #x1734)
+  (challenges-pacifist          #x1735)
+
+  ;;RNG Library
+  (rand-vu                      #x1740)
+  (knuth                        #x1741)
+
+  ;;Additional Checkpoints
+  (checkpoint-training-far      #x1750)
+  (checkpoint-village1-far      #x1751)
+  (checkpoint-beach-pelican     #x1752)
+  (checkpoint-beach-far         #x1753)
+  (checkpoint-jungle-far        #x1754)
+  (checkpoint-swamp-flutflut    #x1755)
+  (checkpoint-village3-cart     #x1756)
+
+  ;; mod text mod-base-change
   (pad-triangle #x2000)
   (pad-circle #x2001)
   (pad-x #x2002)
@@ -898,23 +910,18 @@
 
 ;; an individual string.
 (deftype game-text (structure)
-  ((id    text-id)
-   (text  string)
-   )
-  :pack-me
-  )
+  ((id   text-id)
+   (text string))
+  :pack-me)
 
 ;; A table of all strings.
 (deftype game-text-info (basic)
-  ((length       int32)
-   (language-id  int32)
-   (group-name   string)
-   (data         game-text  :inline :dynamic)
-   )
+  ((length      int32)
+   (language-id int32)
+   (group-name  string)
+   (data        game-text :inline :dynamic))
   (:methods
-    (lookup-text! (_type_ text-id symbol) string)
-    )
-  )
+   (lookup-text! (_type_ text-id symbol) string)))
 
 ;; all text is stored in the COMMON text files (one file per language).
 ;; in theory, you could have multiple text files that are only loaded when needed, but they didn't do this.
@@ -945,7 +952,4 @@
 
 ;; added
 (defun-debug text-id->string ((text text-id))
-  (enum->string text-id text)
-  )
-
-
+  (enum->string text-id text))

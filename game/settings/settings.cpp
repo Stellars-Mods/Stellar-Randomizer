@@ -33,14 +33,16 @@ void from_json(const json& j, DebugSettings& obj) {
   json_deserialize_if_exists(hide_imgui_key);
 }
 
-DebugSettings::DebugSettings() {
+DebugSettings::DebugSettings() {}
+
+void DebugSettings::load_settings() {
   try {
     std::string file_path =
         (file_util::get_user_misc_dir(g_game_version) / "debug-settings.json").string();
     if (!file_util::file_exists(file_path)) {
       return;
     }
-    lg::info("Loading display settings at {}", file_path);
+    lg::info("Loading debug settings at {}", file_path);
     auto raw = file_util::read_text_file(file_path);
     from_json(parse_commented_json(raw, "debug-settings.json"), *this);
   } catch (std::exception& e) {
@@ -51,6 +53,8 @@ DebugSettings::DebugSettings() {
 }
 
 void DebugSettings::save_settings() {
+  // Update the version string as we are now saving it back ground
+  version = current_version;
   json data = *this;
   auto debug_settings_filename =
       file_util::get_user_misc_dir(g_game_version) / "debug-settings.json";
@@ -59,18 +63,26 @@ void DebugSettings::save_settings() {
 }
 
 void to_json(json& j, const DisplaySettings& obj) {
-  j = json{{"display_id", obj.display_id},
-           {"window_xpos", obj.window_xpos},
-           {"window_ypos", obj.window_ypos}};
+  json_serialize(version);
+  json_serialize(display_id);
+  json_serialize(window_xpos);
+  json_serialize(window_ypos);
+  json_serialize(display_mode);
 }
 void from_json(const json& j, DisplaySettings& obj) {
   json_deserialize_if_exists(version);
   json_deserialize_if_exists(display_id);
   json_deserialize_if_exists(window_xpos);
   json_deserialize_if_exists(window_ypos);
+  if (j.contains("display_mode")) {
+    int mode = j.at("display_mode");
+    obj.display_mode = static_cast<DisplaySettings::DisplayMode>(mode);
+  }
 }
 
-DisplaySettings::DisplaySettings() {
+DisplaySettings::DisplaySettings() {}
+
+void DisplaySettings::load_settings() {
   try {
     std::string file_path =
         (file_util::get_user_settings_dir(g_game_version) / "display-settings.json").string();
@@ -87,6 +99,8 @@ DisplaySettings::DisplaySettings() {
 }
 
 void DisplaySettings::save_settings() {
+  // Update the version string as we are now saving it back ground
+  version = current_version;
   json data = *this;
   auto file_path = file_util::get_user_settings_dir(g_game_version) / "display-settings.json";
   file_util::create_dir_if_needed_for_file(file_path);
@@ -94,12 +108,13 @@ void DisplaySettings::save_settings() {
 }
 
 void to_json(json& j, const InputSettings& obj) {
-  j = json{{"version", obj.version},
-           {"last_selected_controller_guid", obj.last_selected_controller_guid},
-           {"controller_port_mapping", obj.controller_port_mapping},
-           {"controller_binds", obj.controller_binds},
-           {"keyboard_binds", obj.keyboard_binds},
-           {"mouse_binds", obj.mouse_binds}};
+  json_serialize(version);
+  json_serialize(last_selected_controller_guid);
+  json_serialize(controller_port_mapping);
+  json_serialize(controller_binds);
+  json_serialize(keyboard_binds);
+  json_serialize(mouse_binds);
+  json_serialize(keyboard_enabled);
 }
 
 void from_json(const json& j, InputSettings& obj) {
@@ -109,9 +124,12 @@ void from_json(const json& j, InputSettings& obj) {
   json_deserialize_if_exists(controller_binds);
   json_deserialize_if_exists(keyboard_binds);
   json_deserialize_if_exists(mouse_binds);
+  json_deserialize_if_exists(keyboard_enabled);
 }
 
-InputSettings::InputSettings() {
+InputSettings::InputSettings() {}
+
+void InputSettings::load_settings() {
   try {
     keyboard_binds = DEFAULT_KEYBOARD_BINDS;
     mouse_binds = DEFAULT_MOUSE_BINDS;
@@ -120,7 +138,7 @@ InputSettings::InputSettings() {
     if (!file_util::file_exists(file_path)) {
       return;
     }
-    lg::info("Loading display settings at {}", file_path);
+    lg::info("Loading input settings at {}", file_path);
     auto raw = file_util::read_text_file(file_path);
     from_json(parse_commented_json(raw, "input-settings.json"), *this);
   } catch (std::exception& e) {
@@ -128,7 +146,10 @@ InputSettings::InputSettings() {
     lg::error("Error encountered when attempting to load input settings {}", e.what());
   }
 }
+
 void InputSettings::save_settings() {
+  // Update the version string as we are now saving it back ground
+  version = current_version;
   json data = *this;
   auto file_path = file_util::get_user_settings_dir(g_game_version) / "input-settings.json";
   file_util::create_dir_if_needed_for_file(file_path);

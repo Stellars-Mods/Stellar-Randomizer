@@ -368,6 +368,7 @@
 
 ;; definition for method 10 of type crane
 (defmethod deactivate ((this crane))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (if (-> this crate)
       (deactivate (-> this crate 0))
       )
@@ -464,11 +465,11 @@
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this crane) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (set! (-> this root) (new 'process 'trsqv))
   (process-drawable-from-entity! this arg0)
   (initialize-skeleton
@@ -555,11 +556,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this cranecrate) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (let ((v1-2 (new 'process 'collide-shape-prim-mesh s4-0 (the-as uint 0) (the-as uint 0))))
       (set! (-> v1-2 prim-core collide-as) (collide-spec obstacle))
@@ -717,7 +718,7 @@ This commonly includes things such as:
                                                                          (shove-back (meters 3))
                                                                          (shove-up (meters 2))
                                                                          (mode 'deadly)
-                                                                         (knock (the-as uint 8))
+                                                                         (knock (knocked-type knocked-type-8))
                                                                          (damage 4.0)
                                                                          )
                                                                         )
@@ -749,11 +750,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this grunt-egg) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (cond
     ((>= (res-lump-value arg0 'extra-id int :default (the-as uint128 -1) :time -1000000000.0) 0)
      (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum hit-by-player))))

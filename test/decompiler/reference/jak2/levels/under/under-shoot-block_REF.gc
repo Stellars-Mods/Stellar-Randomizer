@@ -2335,6 +2335,7 @@
 
 ;; definition for method 10 of type under-shoot-block
 (defmethod deactivate ((this under-shoot-block))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (let ((s5-0 (-> this puzzle spawners)))
     (countdown (s4-0 (-> s5-0 length))
       (let ((s3-0 (-> s5-0 s4-0)))
@@ -2352,11 +2353,11 @@
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this under-shoot-block) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (local-vars (sv-16 res-tag))
   (set! (-> this root) (new 'process 'trsqv))
   (process-drawable-from-entity! this arg0)

@@ -88,11 +88,11 @@
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this dummy-vehicle) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s4-0 (new 'process 'collide-shape-moving this (collide-list-enum usually-hit-by-player))))
     (set! (-> s4-0 dynam) (copy *standard-dynamics* 'process))
     (set! (-> s4-0 reaction) cshape-reaction-default)
@@ -215,11 +215,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this gar-curtain) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (local-vars (sv-16 collide-shape-prim-mesh) (sv-32 symbol) (sv-48 type) (sv-64 collide-shape))
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (let ((s3-0 (new 'process 'collide-shape-prim-group s4-0 (the-as uint 8) 0)))
@@ -1096,6 +1096,7 @@ This commonly includes things such as:
 
 ;; definition for method 10 of type rift-rider
 (defmethod deactivate ((this rift-rider))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (sound-stop (-> this sound-id))
   (call-parent-method this)
   (none)
@@ -1182,11 +1183,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this spotlight) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (set! (-> this root) (new 'process 'trsqv))
   (process-drawable-from-entity! this arg0)
   (initialize-skeleton
@@ -1227,11 +1228,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this gar-door) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s5-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (set! (-> s5-0 penetrated-by) (penetrate))
     (let ((s4-0 (new 'process 'collide-shape-prim-group s5-0 (the-as uint 2) 0)))
@@ -2128,6 +2129,7 @@ This commonly includes things such as:
 
 ;; definition for method 10 of type stad-samos
 (defmethod deactivate ((this stad-samos))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (if (valid? (-> this hud) (the-as type #f) "" #t 0)
       (send-event (handle->process (-> this hud)) 'hide-and-die)
       )
@@ -2140,11 +2142,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this stad-samos) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s4-0 (new 'process 'collide-shape-moving this (collide-list-enum hit-by-others))))
     (set! (-> s4-0 dynam) (copy *standard-dynamics* 'process))
     (set! (-> s4-0 reaction) cshape-reaction-default)
@@ -2325,12 +2327,7 @@ This commonly includes things such as:
               )
             )
           )
-        (let ((a0-10 (-> self skel root-channel 0)))
-          (set! (-> a0-10 frame-interp 1) f28-0)
-          (set! (-> a0-10 frame-interp 0) f28-0)
-          (set! (-> a0-10 param 0) f30-0)
-          (joint-control-channel-group-eval! a0-10 (the-as art-joint-anim #f) num-func-loop!)
-          )
+        (ja :num! (loop! f30-0) :frame-interp0 f28-0 :frame-interp1 f28-0)
         (let ((a0-11 (-> self skel root-channel 1)))
           (let ((f0-9 (- 1.0 f28-0)))
             (set! (-> a0-11 frame-interp 1) f0-9)
@@ -2473,11 +2470,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch entity-perm-status vs none.
 (defmethod init-from-entity! ((this stadium-barrier) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (process-entity-status! this (entity-perm-status dead) #t)
   (none)
   )
@@ -2786,6 +2783,7 @@ This commonly includes things such as:
 
 ;; definition for method 12 of type stad-force-field
 (defmethod run-logic? ((this stad-force-field))
+  "Should this process be run? Checked by execute-process-tree."
   #t
   )
 
@@ -2837,11 +2835,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this stad-force-field) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (stad-force-field-method-28 this)
   (process-drawable-from-entity! this arg0)
   (initialize-skeleton
@@ -2885,11 +2883,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this stad-c-force-field) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (stad-force-field-method-28 this)
   (process-drawable-from-entity! this arg0)
   (initialize-skeleton
@@ -2933,11 +2931,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this stad-d-force-field) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (stad-force-field-method-28 this)
   (process-drawable-from-entity! this arg0)
   (initialize-skeleton
@@ -3207,11 +3205,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this brutter-balloon) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (let ((s3-0 (new 'process 'collide-shape-prim-group s4-0 (the-as uint 3) 0)))
       (set! (-> s4-0 total-prims) (the-as uint 4))

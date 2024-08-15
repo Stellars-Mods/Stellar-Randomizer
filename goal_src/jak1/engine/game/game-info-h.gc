@@ -1,9 +1,7 @@
 ;;-*-Lisp-*-
 (in-package goal)
-
-;; name: game-info-h.gc
-;; name in dgo: game-info-h
-;; dgos: GAME, ENGINE
+(bundles "ENGINE.CGO" "GAME.CGO")
+(require "engine/util/types-h.gc")
 
 ;; This file contains types for:
 ;; - the full game state (game-info)
@@ -14,28 +12,23 @@
 
 ;; Game parameters.
 (deftype game-bank (basic)
-  ((life-max-default    float)  ;; yes this life system works, but does nothing
-   (life-start-default  float)
-   (life-single-inc     float)
-   (money-task-inc      float)
-   (money-oracle-inc    float)
-   )
-  )
+  ((life-max-default   float) ;; yes this life system works, but does nothing
+   (life-start-default float)
+   (life-single-inc    float)
+   (money-task-inc     float)
+   (money-oracle-inc   float)))
 
-
-(define *GAME-bank* (new 'static 'game-bank
-                      :life-max-default 99.0
-                      :life-start-default 5.0
-                      :life-single-inc 1.0
-                      :money-task-inc 90.0
-                      :money-oracle-inc 120.0
-                      )
-        )
+(define *GAME-bank*
+  (new 'static
+       'game-bank
+       :life-max-default 99.0
+       :life-start-default 5.0
+       :life-single-inc 1.0
+       :money-task-inc 90.0
+       :money-oracle-inc 120.0))
 
 ;; aid
-(deftype actor-id (uint32)
-  ()
-  )
+(deftype actor-id (uint32) ())
 
 ;;;;;;;;;;;;;;;
 ;; Load State
@@ -46,48 +39,39 @@
 
 ;; the possible load state for a level.
 (deftype level-buffer-state (structure)
-  ((name           symbol)
-   (display?       symbol)
-   (force-vis?     symbol)
-   (force-inside?  symbol)
-   )
-  :pack-me
-  )
+  ((name          symbol)
+   (display?      symbol)
+   (force-vis?    symbol)
+   (force-inside? symbol))
+  :pack-me)
 
 ;; This includes more state than just "loading" - it also has a list of commands to execute and
 ;; other random state.
 (deftype load-state (basic)
-  ((want           level-buffer-state  2 :inline)
-   (vis-nick       symbol)
-   (command-list   pair)
-   (object-name    symbol              256)
-   (object-status  basic               256)
-   )
+  ((want          level-buffer-state 2 :inline)
+   (vis-nick      symbol)
+   (command-list  pair)
+   (object-name   symbol 256)
+   (object-status basic 256))
   (:methods
-    (new (symbol type) _type_)
-    (reset! (_type_) _type_)
-    (update! (_type_) int)
-    (want-levels (_type_ symbol symbol) int)
-    (want-display-level (_type_ symbol symbol) int)
-    (want-vis (_type_ symbol) int)
-    (want-force-vis (_type_ symbol symbol) int)
-    (execute-command (_type_ pair) none)
-    (execute-commands-up-to (_type_ float) int)
-    (backup-load-state-and-set-cmds (_type_ pair) int)
-    (restore-load-state-and-cleanup (_type_) int)
-    (restore-load-state (_type_) int)
-    (set-force-inside! (_type_ symbol symbol) none)
-    )
-  )
+   (new (symbol type) _type_)
+   (reset! (_type_) _type_)
+   (update! (_type_) int)
+   (want-levels (_type_ symbol symbol) int)
+   (want-display-level (_type_ symbol symbol) int)
+   (want-vis (_type_ symbol) int)
+   (want-force-vis (_type_ symbol symbol) int)
+   (execute-command (_type_ pair) none)
+   (execute-commands-up-to (_type_ float) int)
+   (backup-load-state-and-set-cmds (_type_ pair) int)
+   (restore-load-state-and-cleanup (_type_) int)
+   (restore-load-state (_type_) int)
+   (set-force-inside! (_type_ symbol symbol) none)))
 
 (defmethod new load-state ((allocation symbol) (type-to-make type))
-  (reset!
-   (object-new allocation type-to-make (the-as int (-> type-to-make size)))
-   )
-  )
+  (reset! (object-new allocation type-to-make (the-as int (-> type-to-make size)))))
 
 (define-extern *load-state* load-state)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Game Info
@@ -113,28 +97,28 @@
 
 ;; static data for a continue point
 (deftype continue-point (basic)
-  ((name           string)
-   (level          symbol)
-   (flags          continue-flags)
-   (trans          vector      :inline)
-   (quat           quaternion  :inline)
-   (camera-trans   vector      :inline)
-   (camera-rot     float       9)
-   (load-commands  pair)
-   (vis-nick       symbol)
-   (lev0           symbol)
-   (disp0          symbol)
-   (lev1           symbol)
-   (disp1          symbol)
-   )
+  ((name          string)
+   (level         symbol)
+   (flags         continue-flags)
+   (trans         vector :inline)
+   (quat          quaternion :inline)
+   (camera-trans  vector :inline)
+   (camera-rot    float 9)
+   (load-commands pair)
+   (vis-nick      symbol)
+   (lev0          symbol)
+   (disp0         symbol)
+   (lev1          symbol)
+   (disp1         symbol))
   (:methods
-    (debug-draw! (_type_) none)
-    )
-  )
+   (debug-draw! (_type_) none)))
 
 (declare-type entity-perm structure)
+
 (declare-type entity-perm-array basic)
+
 (declare-type game-save basic)
+
 ;; Game Info is the full state of the game
 ;; this information can be saved/loaded from a game save.
 ;; also, it must be manually synchronized with entity permanent state in the levels
@@ -214,13 +198,12 @@
   )
 
 (define-extern *game-info* game-info)
+
 (when (or (not *game-info*) (zero? *game-info*))
   (let ((temp (new 'static 'game-info :mode 'debug :current-continue #f)))
-    (set! (-> temp fuel-cell-time) (new 'global 'boxed-array time-frame 116))
+    (set! (-> temp fuel-cell-time) (new 'global 'boxed-array time-frame (the int (game-task max)))) ;; mod-base-change changed from hard-coded 116 to (game-task max)
     (set! (-> temp enter-level-time) (new 'global 'boxed-array time-frame 32))
     (set! (-> temp in-level-time) (new 'global 'boxed-array time-frame 32))
-    (set! *game-info* temp)
-    )
-  )
+    (set! *game-info* temp)))
 
 (define-extern game-task->string (function game-task string))

@@ -1094,34 +1094,34 @@
   )
 
 ;; definition for method 7 of type drill-barons-ship-turret
-(defmethod relocate ((this drill-barons-ship-turret) (arg0 int))
+(defmethod relocate ((this drill-barons-ship-turret) (offset int))
   (when (-> this jmod)
     (if (nonzero? (-> this jmod))
-        (&+! (-> this jmod) arg0)
+        (&+! (-> this jmod) offset)
         )
     )
   (when (-> this jmod-left)
     (if (nonzero? (-> this jmod-left))
-        (&+! (-> this jmod-left) arg0)
+        (&+! (-> this jmod-left) offset)
         )
     )
   (when (-> this jmod-right)
     (if (nonzero? (-> this jmod-right))
-        (&+! (-> this jmod-right) arg0)
+        (&+! (-> this jmod-right) offset)
         )
     )
-  (call-parent-method this arg0)
+  (call-parent-method this offset)
   )
 
 ;; definition for method 11 of type drill-barons-ship
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this drill-barons-ship) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (let ((s4-0 (new 'process 'collide-shape this (collide-list-enum usually-hit-by-player))))
     (let ((s3-0 (new 'process 'collide-shape-prim-group s4-0 (the-as uint 1) 0)))
       (set! (-> s4-0 total-prims) (the-as uint 2))

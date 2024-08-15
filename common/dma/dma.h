@@ -11,7 +11,7 @@
 #include "common/common_types.h"
 #include "common/util/Assert.h"
 
-#include "third-party/fmt/core.h"
+#include "fmt/core.h"
 
 struct DmaStats {
   double sync_time_ms = 0;
@@ -52,7 +52,7 @@ struct DmaTag {
 
   bool operator!=(const DmaTag& other) const { return !((*this) == other); }
 
-  std::string print();
+  std::string print() const;
 };
 
 inline void emulate_dma(const void* source_base, void* dest_base, u32 tadr, u32 dadr) {
@@ -148,7 +148,7 @@ struct VifCode {
   u16 num;
   u16 immediate;
 
-  std::string print();
+  std::string print() const;
 };
 
 struct VifCodeStcycl {

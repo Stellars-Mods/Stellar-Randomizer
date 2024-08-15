@@ -3570,6 +3570,7 @@
 
 ;; definition for method 10 of type hiphog-exterior-marquee
 (defmethod deactivate ((this hiphog-exterior-marquee))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (dotimes (s5-0 1)
     (let ((a0-1 (-> this parts s5-0)))
       (if (nonzero? a0-1)
@@ -3583,13 +3584,13 @@
 
 ;; definition for method 7 of type hiphog-exterior-marquee
 ;; WARN: Return type mismatch process-drawable vs hiphog-exterior-marquee.
-(defmethod relocate ((this hiphog-exterior-marquee) (arg0 int))
+(defmethod relocate ((this hiphog-exterior-marquee) (offset int))
   (dotimes (v1-0 1)
     (if (nonzero? (-> this parts v1-0))
-        (&+! (-> this parts v1-0) arg0)
+        (&+! (-> this parts v1-0) offset)
         )
     )
-  (the-as hiphog-exterior-marquee ((method-of-type process-drawable relocate) this arg0))
+  (the-as hiphog-exterior-marquee ((method-of-type process-drawable relocate) this offset))
   )
 
 ;; definition for method 21 of type hiphog-exterior-marquee
@@ -3645,11 +3646,11 @@
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this hiphog-exterior-marquee) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (set! (-> this root) (new 'process 'trsqv))
   (process-drawable-from-entity! this arg0)
   (logclear! (-> this mask) (process-mask actor-pause enemy))
@@ -3778,11 +3779,11 @@ This commonly includes things such as:
 ;; WARN: Return type mismatch object vs none.
 (defmethod init-from-entity! ((this farthy) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
-This commonly includes things such as:
-- stack size
-- collision information
-- loading the skeleton group / bones
-- sounds"
+   This commonly includes things such as:
+   - stack size
+   - collision information
+   - loading the skeleton group / bones
+   - sounds"
   (set! (-> this root) (new 'process 'trsqv))
   (process-drawable-from-entity! this arg0)
   (set! (-> this root pause-adjust-distance) 1228800.0)
