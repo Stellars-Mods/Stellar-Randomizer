@@ -893,7 +893,7 @@
                                   (- string-y 5)
                                   (font-color yellow)
                                   (font-flags shadow kerning middle large)
-                                  0.8)))
+                                  0.8))))
         (((hud-collectable-view original))
          ;; show original (cells collected across entire game)
          (draw-string-xy (string-format "~D" (-> this value))

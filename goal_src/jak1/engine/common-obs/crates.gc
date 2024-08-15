@@ -540,7 +540,7 @@
     (suspend)
     (update-transforms! (-> self root))
     (logior! (-> self mask) (process-mask sleep))
-    (if (and (-> *randomizer-settings* warp-on-orb?) (= (-> self defense) 'steel))
+    (if (and (= (-> self fact pickup-type) (pickup-type money)) (-> *randomizer-settings* warp-on-orb?)) ;; pre-break crates if we're warping on orb
       (go-virtual die #f 0)
       )
     (loop
@@ -631,7 +631,8 @@
     (behavior ((arg0 symbol) (arg1 int))
       (clear-collide-with-as (-> self root))
       (if (nonzero? (-> self sound)) (stop! (-> self sound)))
-      (if (and *target* (not (-> *randomizer-settings* warp-on-orb?))
+      (if (and *target* 
+               (not (and (= (-> self fact pickup-type) (pickup-type money)) (-> *randomizer-settings* warp-on-orb?))) ;; if orb crate and warp on orb, no instant collect
                (and (logtest? (-> *target* control root-prim prim-core action) (collide-action racer snowball tube flut))
                     (!= (-> self fact pickup-type) 6)
                     (not arg0)))

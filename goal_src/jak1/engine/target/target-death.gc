@@ -706,6 +706,9 @@
       (apply-settings *setting-control*)
       (set! (-> self control transv quad) (the-as uint128 0))
       (logior! (-> self state-flags) (state-flags dying))
+      (when (and (-> *randomizer-settings* checkpoint-randomizer?) (-> *randomizer-settings* warp-on-death?))
+        (orchestrateCheckpointWarp 1)
+        )
       (case arg0
         (('none 'instant-death))
         (('ogreboss-super-boulder)
@@ -887,9 +890,6 @@
         (else
          (case arg0
            (('tar) (sound-play "death-drown")))
-         (when (and (-> *randomizer-settings* checkpoint-randomizer?) (-> *randomizer-settings* warp-on-death?))
-          (orchestrateCheckpointWarp 1)
-          )
          (+! (-> *game-info* death-movie-tick) 1)
          (if (= (death-movie-remap (+ (-> *game-info* death-movie-tick) -1) (-> *death-spool-array* length))
                 (death-movie-remap (-> *game-info* death-movie-tick) (-> *death-spool-array* length)))
