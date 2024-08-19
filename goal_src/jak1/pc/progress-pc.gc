@@ -2212,10 +2212,9 @@
   (set! (-> *gfx-ps2-options* 3 value-to-modify) (&-> *pc-settings* force-envmap?))
   (set! (-> *gfx-ps2-options* 4 value-to-modify) (&-> *pc-settings* ps2-actor-vis?))
 
-  (set! (-> *sound-options-pc* 0 value-to-modify) (&-> *setting-control* default sfx-volume))
-  (set! (-> *sound-options-pc* 1 value-to-modify) (&-> *setting-control* default music-volume))
-  (set! (-> *sound-options-pc* 2 value-to-modify) (&-> *setting-control* default dialog-volume))
-  ;(set! (-> *sound-options-pc* 3 value-to-modify) (&-> *pc-settings* music-fadein?))
+  (set! (-> *sound-options-pc* 0 value-to-modify) (&-> *pc-settings* memcard-volume-sfx))
+  (set! (-> *sound-options-pc* 1 value-to-modify) (&-> *pc-settings* memcard-volume-music))
+  (set! (-> *sound-options-pc* 2 value-to-modify) (&-> *pc-settings* memcard-volume-dialog))
 
   (dotimes (i (1- (-> *cheats* length)))
       (set! (-> *cheats* i value-to-modify) (&-> *progress-carousell* symbol-backup))
